@@ -39,15 +39,30 @@
 }
 
 /* Article HTML body styles */
-.article-body h1 { @apply text-2xl font-bold mb-4 mt-6 text-navy-700; }
-.article-body h2 { @apply text-xl font-bold mb-3 mt-5 text-navy-700; }
-.article-body h3 { @apply text-lg font-semibold mb-2 mt-4; }
-.article-body p  { @apply mb-4 leading-relaxed text-gray-700; }
-.article-body ul { @apply list-disc pl-6 mb-4 space-y-1 text-gray-700; }
-.article-body ol { @apply list-decimal pl-6 mb-4 space-y-1 text-gray-700; }
-.article-body blockquote { @apply border-l-4 border-crimson-600 pl-4 italic text-gray-600 my-4; }
-.article-body strong { @apply font-semibold text-gray-900; }
+.article-body {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #2d3748;
+}
+.article-body h1 { @apply text-2xl font-bold mb-5 mt-8 text-navy-700; }
+.article-body h2 { @apply text-xl font-bold mb-4 mt-7 text-navy-700 border-b border-gray-200 pb-2; }
+.article-body h3 { @apply text-lg font-semibold mb-3 mt-6 text-navy-600; }
+.article-body p  {
+  @apply mb-5 text-gray-800;
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.9;
+}
+.article-body ul { @apply list-disc pl-6 mb-5 space-y-2 text-gray-700; }
+.article-body ol { @apply list-decimal pl-6 mb-5 space-y-2 text-gray-700; }
+.article-body li { text-align: justify; }
+.article-body blockquote {
+  @apply border-l-4 border-crimson-600 pl-5 italic text-gray-600 my-6 bg-gray-50 py-3 pr-4 rounded-r-lg;
+  font-size: 1.05rem;
+}
+.article-body strong { @apply font-bold text-gray-900; }
 .article-body a { @apply text-navy-600 underline hover:text-crimson-600; }
+.article-body img { @apply rounded-xl my-6 w-full object-cover shadow-md; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
