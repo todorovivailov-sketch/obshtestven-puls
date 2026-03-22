@@ -22,9 +22,12 @@ export default function Navbar() {
                 <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <span className="text-white font-bold text-lg tracking-tight">
-              Обществен <span className="text-crimson-400">пулс</span>
-            </span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-white font-bold text-lg tracking-tight">
+                Обществен <span className="text-crimson-400">пулс</span>
+              </span>
+              <span className="text-navy-300 text-xs font-medium tracking-wide">Силистра и региона</span>
+            </div>
           </Link>
 
           {/* Desktop nav */}

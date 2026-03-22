@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { pollsApi } from '../../lib/api'
 import PollChart from '../../components/PollChart'
 
-const EMPTY_FORM = { question: '', description: '', ends_at: '', options: ['', ''] }
+const EMPTY_FORM = { question: '', description: '', start_date: '', end_date: '', options: ['', ''] }
 
 export default function AdminPolls() {
   const [polls, setPolls] = useState([])
@@ -12,6 +12,9 @@ export default function AdminPolls() {
   const [error, setError] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [expandedId, setExpandedId] = useState(null)
+  const [imageFile, setImageFile] = useState(null)
+  const [publishingResults, setPublishingResults] = useState(null)
+  const imageRef = useRef()
 
   async function loadPolls() {
     const [active, closed] = await Promise.all([
@@ -49,14 +52,31 @@ export default function AdminPolls() {
     if (opts.length < 2) { setError('Добавете поне 2 отговора.'); return }
     setSaving(true)
     setError(null)
-    const res = await pollsApi.create({
-      question: form.question,
-      description: form.description,
-      ends_at: form.ends_at || null,
-      options: opts,
-    })
+
+    let payload
+    if (imageFile) {
+      const fd = new FormData()
+      fd.append('question', form.question)
+      fd.append('description', form.description || '')
+      if (form.start_date) fd.append('start_date', form.start_date)
+      if (form.end_date) fd.append('end_date', form.end_date)
+      fd.append('options', JSON.stringify(opts))
+      fd.append('image', imageFile)
+      payload = fd
+    } else {
+      payload = {
+        question: form.question,
+        description: form.description,
+        start_date: form.start_date || null,
+        end_date: form.end_date || null,
+        options: opts,
+      }
+    }
+
+    const res = await pollsApi.create(payload, !!imageFile)
     if (res.id) {
       setForm(EMPTY_FORM)
+      setImageFile(null)
       setShowForm(false)
       loadPolls()
     } else {
@@ -82,6 +102,19 @@ export default function AdminPolls() {
     const { results } = await pollsApi.getOne(poll.id)
     setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
     setExpandedId(poll.id)
+  }
+
+  async function publishResults(poll) {
+    setPublishingResults(poll.id)
+    // Load results first if not loaded
+    if (!poll.results) {
+      const { results } = await pollsApi.getOne(poll.id)
+      setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
+    }
+    await pollsApi.update({ id: poll.id, results_published: true })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results_published: true } : p))
+    setExpandedId(poll.id)
+    setPublishingResults(null)
   }
 
   return (
@@ -121,14 +154,52 @@ export default function AdminPolls() {
               />
             </div>
 
+            <div className="grid md:grid-cols-2 gap-5">
+              <div>
+                <label className="label">Начална дата (незадължително)</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={form.start_date}
+                  onChange={e => setForm({ ...form, start_date: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="label">Крайна дата (незадължително)</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={form.end_date}
+                  onChange={e => setForm({ ...form, end_date: e.target.value })}
+                />
+              </div>
+            </div>
+
+            {/* Снимка */}
             <div>
-              <label className="label">Приключва на (незадължително)</label>
-              <input
-                type="datetime-local"
-                className="input"
-                value={form.ends_at}
-                onChange={e => setForm({ ...form, ends_at: e.target.value })}
-              />
+              <label className="label">Снимка (незадължително)</label>
+              <div
+                className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-navy-400 transition-colors"
+                onClick={() => imageRef.current?.click()}
+              >
+                {imageFile ? (
+                  <div className="flex items-center justify-center gap-2 text-green-600">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-sm font-medium">{imageFile.name}</span>
+                  </div>
+                ) : (
+                  <div className="text-gray-400">
+                    <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-sm">Кликнете за качване на снимка</p>
+                    <p className="text-xs mt-1">JPG, PNG, WebP</p>
+                  </div>
+                )}
+                <input ref={imageRef} type="file" accept="image/*" className="hidden" onChange={e => setImageFile(e.target.files[0])} />
+              </div>
             </div>
 
             {/* Варианти за отговор */}
@@ -176,7 +247,7 @@ export default function AdminPolls() {
               <button type="submit" disabled={saving} className="btn-primary">
                 {saving ? 'Публикуване...' : 'Публикувай анкетата'}
               </button>
-              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM) }} className="btn-outline">
+              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setImageFile(null) }} className="btn-outline">
                 Отказ
               </button>
             </div>
@@ -203,22 +274,46 @@ export default function AdminPolls() {
                         ? <span className="badge-active"><span className="w-1.5 h-1.5 bg-green-500 rounded-full" />Активна</span>
                         : <span className="badge-closed">Приключила</span>
                       }
+                      {poll.results_published && (
+                        <span className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-semibold">Резултатите публикувани</span>
+                      )}
                     </div>
                     <h3 className="font-semibold text-gray-900">{poll.question}</h3>
-                    {poll.ends_at && (
-                      <p className="text-xs text-gray-400 mt-1">
-                        Приключва: {new Date(poll.ends_at).toLocaleDateString('bg-BG')}
-                      </p>
-                    )}
+                    <div className="flex gap-4 mt-1">
+                      {poll.start_date && (
+                        <p className="text-xs text-gray-400">
+                          От: {new Date(poll.start_date).toLocaleDateString('bg-BG')}
+                        </p>
+                      )}
+                      {poll.end_date && (
+                        <p className="text-xs text-gray-400">
+                          До: {new Date(poll.end_date).toLocaleDateString('bg-BG')}
+                        </p>
+                      )}
+                      {poll.ends_at && !poll.end_date && (
+                        <p className="text-xs text-gray-400">
+                          Приключва: {new Date(poll.ends_at).toLocaleDateString('bg-BG')}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                     <button
                       onClick={() => loadResults(poll)}
                       className="text-sm text-navy-600 hover:text-navy-800 px-3 py-1.5 rounded-lg hover:bg-navy-50 border border-navy-200 font-medium"
                     >
                       {expandedId === poll.id ? 'Скрий' : 'Резултати'}
                     </button>
+                    {poll.status === 'closed' && !poll.results_published && (
+                      <button
+                        onClick={() => publishResults(poll)}
+                        disabled={publishingResults === poll.id}
+                        className="text-sm text-blue-700 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
+                      >
+                        {publishingResults === poll.id ? 'Публикуване...' : 'Публикувай резултати'}
+                      </button>
+                    )}
                     <button
                       onClick={() => toggleStatus(poll)}
                       className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-colors ${
@@ -242,6 +337,18 @@ export default function AdminPolls() {
               {/* Резултати */}
               {expandedId === poll.id && (
                 <div className="border-t border-gray-100 p-5 bg-gray-50">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h4 className="font-semibold text-navy-700 text-sm">Резултати от анкетата</h4>
+                    {!poll.results_published && (
+                      <button
+                        onClick={() => publishResults(poll)}
+                        disabled={publishingResults === poll.id}
+                        className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-medium transition-colors"
+                      >
+                        {publishingResults === poll.id ? 'Публикуване...' : 'Публикувай резултати публично'}
+                      </button>
+                    )}
+                  </div>
                   <PollChart results={poll.results} options={poll.options} />
                 </div>
               )}

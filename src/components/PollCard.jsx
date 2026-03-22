@@ -10,6 +10,7 @@ export default function PollCard({ poll, showResults = false }) {
   const [error, setError] = useState(null)
 
   const isClosed = poll.status === 'closed'
+  const showResultsPublic = isClosed && poll.results_published
 
   async function handleVote() {
     if (!selected || loading) return
@@ -87,9 +88,30 @@ export default function PollCard({ poll, showResults = false }) {
           </div>
         )}
 
-        {/* Резултати */}
-        {(voted || isClosed) && (
+        {/* Резултати — показват се само ако анкетата е приключила И резултатите са публикувани */}
+        {showResultsPublic && (
           <PollChart results={results || poll.results} options={poll.options} />
+        )}
+
+        {/* Приключила анкета, но резултатите още не са публикувани */}
+        {isClosed && !showResultsPublic && !voted && (
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+            <p className="text-gray-600 font-medium text-sm">Анкетата е приключила.</p>
+            <p className="text-gray-400 text-xs mt-1">Резултатите ще бъдат публикувани скоро.</p>
+          </div>
+        )}
+
+        {/* След гласуване — благодарствено съобщение (когато резултатите не са публикувани) */}
+        {voted && !showResultsPublic && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+            <div className="text-green-600 mb-1">
+              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-green-800 font-semibold text-sm">Благодарим за вашия глас!</p>
+            <p className="text-green-600 text-xs mt-1">Резултатите ще бъдат публикувани след приключване на анкетата.</p>
+          </div>
         )}
 
         {error && voted && <p className="text-crimson-600 text-sm mt-2">{error}</p>}

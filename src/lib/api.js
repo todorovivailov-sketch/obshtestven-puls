@@ -19,8 +19,14 @@ export const pollsApi = {
   getOne: (id) =>
     fetch(`${BASE}/polls?id=${id}`).then(r => r.json()),
 
-  create: (data) =>
-    fetch(`${BASE}/polls`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),
+  create: (data, isFormData = false) =>
+    fetch(`${BASE}/polls`, {
+      method: 'POST',
+      headers: isFormData
+        ? { Authorization: `Bearer ${getToken()}` }
+        : authHeaders(),
+      body: isFormData ? data : JSON.stringify(data),
+    }).then(r => r.json()),
 
   update: (data) =>
     fetch(`${BASE}/polls`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),
@@ -49,6 +55,14 @@ export const articlesApi = {
 
   create: (data) =>
     fetch(`${BASE}/articles`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),
+
+  // FormData — браузърът автоматично задава Content-Type с boundary
+  createWithFormData: (formData) =>
+    fetch(`${BASE}/articles`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(r => r.json()),
 
   update: (data) =>
     fetch(`${BASE}/articles`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),

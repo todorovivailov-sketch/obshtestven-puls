@@ -1,9 +1,45 @@
 import { createClient } from '@supabase/supabase-js'
+import busboy from 'busboy'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 )
+
+// Parse multipart/form-data
+function parseFormData(event) {
+  return new Promise((resolve, reject) => {
+    const fields = {}
+    let fileBuffer = null
+    let fileName = null
+    let fileMime = null
+
+    const contentType = event.headers['content-type'] || event.headers['Content-Type'] || ''
+    const bb = busboy({ headers: { 'content-type': contentType } })
+
+    bb.on('field', (name, val) => {
+      fields[name] = val
+    })
+
+    bb.on('file', (name, file, info) => {
+      fileName = info.filename
+      fileMime = info.mimeType
+      const chunks = []
+      file.on('data', chunk => chunks.push(chunk))
+      file.on('end', () => { fileBuffer = Buffer.concat(chunks) })
+    })
+
+    bb.on('finish', () => resolve({ fields, fileBuffer, fileName, fileMime }))
+    bb.on('error', reject)
+
+    const body = event.isBase64Encoded
+      ? Buffer.from(event.body, 'base64')
+      : Buffer.from(event.body || '')
+
+    bb.write(body)
+    bb.end()
+  })
+}
 
 export const handler = async (event) => {
   const headers = {
@@ -57,11 +93,44 @@ export const handler = async (event) => {
       const token = event.headers.authorization?.replace('Bearer ', '')
       if (!verifyAdmin(token)) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Неоторизиран' }) }
 
-      const { question, description, ends_at, options } = JSON.parse(event.body)
+      const contentType = event.headers['content-type'] || event.headers['Content-Type'] || ''
+
+      let question, description, start_date, end_date, options, image_url
+
+      if (contentType.includes('multipart/form-data')) {
+        const { fields, fileBuffer, fileName, fileMime } = await parseFormData(event)
+        question = fields.question
+        description = fields.description || null
+        start_date = fields.start_date || null
+        end_date = fields.end_date || null
+        options = fields.options ? JSON.parse(fields.options) : []
+
+        // Качи снимката
+        if (fileBuffer && fileName) {
+          const ext = fileName.split('.').pop()
+          const storagePath = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+          const { error: uploadError } = await supabase.storage
+            .from('poll-images')
+            .upload(storagePath, fileBuffer, { contentType: fileMime || 'image/jpeg', upsert: false })
+          if (uploadError) throw uploadError
+
+          const { data: urlData } = supabase.storage.from('poll-images').getPublicUrl(storagePath)
+          image_url = urlData.publicUrl
+        }
+      } else {
+        const parsed = JSON.parse(event.body)
+        question = parsed.question
+        description = parsed.description || null
+        start_date = parsed.start_date || null
+        end_date = parsed.end_date || null
+        options = parsed.options
+        image_url = parsed.image_url || null
+      }
+
       if (!question || !options?.length) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Липсват данни' }) }
 
       const { data: poll, error: pe } = await supabase
-        .from('polls').insert({ question, description, ends_at }).select().single()
+        .from('polls').insert({ question, description, start_date, end_date, image_url }).select().single()
       if (pe) throw pe
 
       const optRows = options.map((label, i) => ({ poll_id: poll.id, label, position: i }))
@@ -71,14 +140,22 @@ export const handler = async (event) => {
       return { statusCode: 201, headers, body: JSON.stringify(poll) }
     }
 
-    // PUT /api/polls — затваряне / редакция
+    // PUT /api/polls — затваряне / редакция / публикуване на резултати
     if (event.httpMethod === 'PUT') {
       const token = event.headers.authorization?.replace('Bearer ', '')
       if (!verifyAdmin(token)) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Неоторизиран' }) }
 
-      const { id, status, question, description, ends_at } = JSON.parse(event.body)
+      const { id, status, question, description, start_date, end_date, results_published } = JSON.parse(event.body)
+      const updateFields = {}
+      if (status !== undefined) updateFields.status = status
+      if (question !== undefined) updateFields.question = question
+      if (description !== undefined) updateFields.description = description
+      if (start_date !== undefined) updateFields.start_date = start_date
+      if (end_date !== undefined) updateFields.end_date = end_date
+      if (results_published !== undefined) updateFields.results_published = results_published
+
       const { data, error } = await supabase
-        .from('polls').update({ status, question, description, ends_at }).eq('id', id).select().single()
+        .from('polls').update(updateFields).eq('id', id).select().single()
       if (error) throw error
 
       return { statusCode: 200, headers, body: JSON.stringify(data) }

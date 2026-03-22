@@ -146,7 +146,21 @@ CREATE POLICY "public_contact"           ON contact_messages FOR INSERT WITH CHE
 
 
 -- ------------------------------------------------
--- 10. ТЕСТОВИ ДАННИ (по желание)
+-- 10. ALTER TABLE — нови полета
+-- ------------------------------------------------
+
+-- polls: начална дата, крайна дата, снимка, публикуване на резултати
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS start_date  DATE;
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS end_date    DATE;
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS image_url   TEXT;
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS results_published BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- articles: добави author, направи summary nullable (не го изтриваме за съвместимост)
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS author   TEXT;
+ALTER TABLE articles ALTER COLUMN summary DROP NOT NULL;
+
+-- ------------------------------------------------
+-- 11. ТЕСТОВИ ДАННИ (по желание)
 -- ------------------------------------------------
 
 -- Примерна анкета

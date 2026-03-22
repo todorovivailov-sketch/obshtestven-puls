@@ -1,9 +1,45 @@
 import { createClient } from '@supabase/supabase-js'
+import busboy from 'busboy'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 )
+
+// Parse multipart/form-data
+function parseFormData(event) {
+  return new Promise((resolve, reject) => {
+    const fields = {}
+    let fileBuffer = null
+    let fileName = null
+    let fileMime = null
+
+    const contentType = event.headers['content-type'] || event.headers['Content-Type'] || ''
+    const bb = busboy({ headers: { 'content-type': contentType } })
+
+    bb.on('field', (name, val) => {
+      fields[name] = val
+    })
+
+    bb.on('file', (name, file, info) => {
+      fileName = info.filename
+      fileMime = info.mimeType
+      const chunks = []
+      file.on('data', chunk => chunks.push(chunk))
+      file.on('end', () => { fileBuffer = Buffer.concat(chunks) })
+    })
+
+    bb.on('finish', () => resolve({ fields, fileBuffer, fileName, fileMime }))
+    bb.on('error', reject)
+
+    const body = event.isBase64Encoded
+      ? Buffer.from(event.body, 'base64')
+      : Buffer.from(event.body || '')
+
+    bb.write(body)
+    bb.end()
+  })
+}
 
 export const handler = async (event) => {
   const headers = {
@@ -28,7 +64,7 @@ export const handler = async (event) => {
         return { statusCode: 200, headers, body: JSON.stringify(data) }
       }
 
-      let query = supabase.from('articles').select('id, title, summary, category, image_url, created_at')
+      let query = supabase.from('articles').select('id, title, author, category, image_url, created_at')
         .eq('published', true).order('created_at', { ascending: false })
       if (category) query = query.eq('category', category)
 
@@ -42,11 +78,50 @@ export const handler = async (event) => {
       const token = event.headers.authorization?.replace('Bearer ', '')
       if (!verifyAdmin(token)) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Неоторизиран' }) }
 
-      const { title, summary, body, category, image_url, docx_url, published } = JSON.parse(event.body)
+      const contentType = event.headers['content-type'] || event.headers['Content-Type'] || ''
+
+      let title, author, body, category, image_url, docx_url, published
+
+      if (contentType.includes('multipart/form-data')) {
+        // FormData с файл
+        const { fields, fileBuffer, fileName, fileMime } = await parseFormData(event)
+        title = fields.title
+        author = fields.author || null
+        body = fields.body
+        category = fields.category || 'analysis'
+        docx_url = fields.docx_url || null
+        published = fields.published !== 'false'
+
+        if (!title || !body) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Липсват данни' }) }
+
+        // Качи снимката в Supabase Storage
+        if (fileBuffer && fileName) {
+          const ext = fileName.split('.').pop()
+          const storagePath = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+          const { error: uploadError } = await supabase.storage
+            .from('article-images')
+            .upload(storagePath, fileBuffer, { contentType: fileMime || 'image/jpeg', upsert: false })
+          if (uploadError) throw uploadError
+
+          const { data: urlData } = supabase.storage.from('article-images').getPublicUrl(storagePath)
+          image_url = urlData.publicUrl
+        }
+      } else {
+        // JSON без снимка
+        const parsed = JSON.parse(event.body)
+        title = parsed.title
+        author = parsed.author || null
+        body = parsed.body
+        category = parsed.category || 'analysis'
+        image_url = parsed.image_url || null
+        docx_url = parsed.docx_url || null
+        published = parsed.published ?? true
+      }
+
       if (!title || !body) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Липсват данни' }) }
 
       const { data, error } = await supabase
-        .from('articles').insert({ title, summary, body, category, image_url, docx_url, published: published ?? true })
+        .from('articles').insert({ title, author, body, category, image_url, docx_url, published })
         .select().single()
       if (error) throw error
 

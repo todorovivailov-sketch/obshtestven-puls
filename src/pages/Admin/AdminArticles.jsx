@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { articlesApi, uploadApi } from '../../lib/api'
 
-const EMPTY_FORM = { title: '', summary: '', body: '', category: 'analysis', published: true }
+const EMPTY_FORM = { title: '', author: '', body: '', category: 'analysis', published: true }
 const CATEGORIES = [
   { value: 'analysis', label: 'Анализ' },
   { value: 'comment', label: 'Коментар' },
@@ -51,20 +51,30 @@ export default function AdminArticles() {
     setSaving(true)
     setError(null)
 
-    let image_url = form.image_url || null
     let docx_url = form.docx_url || null
 
     try {
-      // Качване на снимка
-      if (imageFile) {
-        image_url = await uploadApi.uploadFile(imageFile, 'article-images')
-      }
       // Качване на оригинален docx
       if (docxFile) {
         docx_url = await uploadApi.uploadFile(docxFile, 'article-docs')
       }
 
-      const res = await articlesApi.create({ ...form, image_url, docx_url })
+      // Използваме FormData когато има снимка
+      let res
+      if (imageFile) {
+        const fd = new FormData()
+        fd.append('title', form.title)
+        fd.append('author', form.author || '')
+        fd.append('body', form.body)
+        fd.append('category', form.category)
+        fd.append('published', form.published ? 'true' : 'false')
+        if (docx_url) fd.append('docx_url', docx_url)
+        fd.append('image', imageFile)
+        res = await articlesApi.createWithFormData(fd)
+      } else {
+        res = await articlesApi.create({ ...form, docx_url })
+      }
+
       if (res.id) {
         setForm(EMPTY_FORM)
         setImageFile(null)
@@ -119,26 +129,25 @@ export default function AdminArticles() {
                 />
               </div>
               <div>
-                <label className="label">Категория</label>
-                <select
+                <label className="label">Автор</label>
+                <input
                   className="input"
-                  value={form.category}
-                  onChange={e => setForm({ ...form, category: e.target.value })}
-                >
-                  {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                </select>
+                  value={form.author}
+                  onChange={e => setForm({ ...form, author: e.target.value })}
+                  placeholder="Име на автора"
+                />
               </div>
             </div>
 
             <div>
-              <label className="label">Кратко резюме (за картата)</label>
-              <textarea
-                className="input resize-none"
-                rows={2}
-                value={form.summary}
-                onChange={e => setForm({ ...form, summary: e.target.value })}
-                placeholder="2-3 изречения за прегледа..."
-              />
+              <label className="label">Категория</label>
+              <select
+                className="input"
+                value={form.category}
+                onChange={e => setForm({ ...form, category: e.target.value })}
+              >
+                {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+              </select>
             </div>
 
             {/* Снимка */}

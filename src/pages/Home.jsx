@@ -34,7 +34,7 @@ export default function Home() {
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
           <p className="text-navy-200 text-lg mb-8 max-w-xl mx-auto">
-            Независима платформа за граждански анкети и задълбочени анализи по актуални политически и обществени теми.
+            Платформа за анкети по политически, обществено значими и злободневни теми. Анкети за предпочитанията и навиците на гражданите.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/anketi" className="btn-primary">Вижте анкетите</Link>
@@ -95,23 +95,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats strip */}
-      <section className="bg-navy-700 py-10">
-        <div className="max-w-4xl mx-auto px-4 grid grid-cols-3 gap-6 text-center text-white">
-          <div>
-            <div className="text-3xl font-bold text-crimson-400">100%</div>
-            <div className="text-navy-200 text-sm mt-1">Анонимно гласуване</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-crimson-400">0</div>
-            <div className="text-navy-200 text-sm mt-1">Регистрация не е нужна</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-crimson-400">24/7</div>
-            <div className="text-navy-200 text-sm mt-1">Актуални резултати</div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }
