@@ -12,14 +12,20 @@ export default function AdminLogin() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    const res = await adminApi.login(password)
-    if (res.token) {
-      localStorage.setItem('admin_token', res.token)
-      navigate('/admin')
-    } else {
-      setError(res.error || 'Грешна парола')
+    try {
+      const res = await adminApi.login(password)
+      if (res.token) {
+        localStorage.setItem('admin_token', res.token)
+        navigate('/admin')
+      } else {
+        setError(res.error || 'Грешна парола')
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setError('Грешка при свързване със сървъра')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
