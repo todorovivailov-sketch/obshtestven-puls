@@ -1,4 +1,4 @@
-const BASE = '/api'
+const BASE = '/.netlify/functions'
 
 function getToken() {
   return localStorage.getItem('admin_token')
