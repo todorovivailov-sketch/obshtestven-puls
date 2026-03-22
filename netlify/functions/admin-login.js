@@ -13,13 +13,21 @@ export const handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Само POST' }) }
 
   try {
+    const jwtSecret = process.env.JWT_SECRET
+    const passwordHash = process.env.ADMIN_PASSWORD_HASH
+
+    if (!jwtSecret || !passwordHash) {
+      console.error('Липсват env променливи:', { jwtSecret: !!jwtSecret, passwordHash: !!passwordHash })
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Сървърна конфигурация липсва' }) }
+    }
+
     const { password } = JSON.parse(event.body)
-    const valid = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH)
+    const valid = await bcrypt.compare(password, passwordHash)
 
     if (!valid) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Грешна парола' }) }
 
     const payload = { role: 'admin', exp: Math.floor(Date.now() / 1000) + 60 * 60 * 8 }
-    const token = makeJWT(payload, process.env.JWT_SECRET)
+    const token = makeJWT(payload, jwtSecret)
 
     return { statusCode: 200, headers, body: JSON.stringify({ token }) }
   } catch (err) {
