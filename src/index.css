@@ -43,6 +43,11 @@
   font-size: 1.1rem;
   line-height: 1.9;
   color: #2d3748;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
 }
 .article-body h1 { @apply text-2xl font-bold mb-5 mt-8 text-navy-700; }
 .article-body h2 { @apply text-xl font-bold mb-4 mt-7 text-navy-700 border-b border-gray-200 pb-2; }
