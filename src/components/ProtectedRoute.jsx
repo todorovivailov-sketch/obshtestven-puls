@@ -6,7 +6,8 @@ export default function ProtectedRoute({ children }) {
 
   // Проверяваме дали е изтекъл
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    const payload = JSON.parse(atob(base64))
     if (payload.exp < Date.now() / 1000) {
       localStorage.removeItem('admin_token')
       return <Navigate to="/admin/login" replace />
