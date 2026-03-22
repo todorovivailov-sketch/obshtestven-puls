@@ -16,7 +16,7 @@ export default function AdminLogin() {
       const res = await adminApi.login(password)
       if (res.token) {
         localStorage.setItem('admin_token', res.token)
-        navigate('/admin')
+        window.location.href = '/admin'
       } else {
         setError(res.error || 'Грешна парола')
       }
