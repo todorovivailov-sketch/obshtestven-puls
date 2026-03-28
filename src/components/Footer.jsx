@@ -17,7 +17,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-3">Навигация</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/anketi" className="hover:text-white transition-colors">Анкети</Link></li>
-              <li><Link to="/minali-anketi" className="hover:text-white transition-colors">Минали анкети</Link></li>
+              <li><Link to="/rezultati" className="hover:text-white transition-colors">Резултати</Link></li>
               <li><Link to="/komentari" className="hover:text-white transition-colors">Коментари и анализи</Link></li>
               <li><Link to="/kontakti" className="hover:text-white transition-colors">Контакти</Link></li>
             </ul>

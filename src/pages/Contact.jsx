@@ -92,7 +92,7 @@ export default function Contact() {
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-0.5">Имейл</div>
-            <div className="text-sm font-medium text-gray-800">info@obshtestven-puls.bg</div>
+            <div className="text-sm font-medium text-gray-800">obshtestvenpuls@gmail.com</div>
           </div>
         </div>
         <div className="card p-5 flex items-center gap-4">
