@@ -104,7 +104,23 @@ export default function Contact() {
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-0.5">Местоположение</div>
-            <div className="text-sm font-medium text-gray-800">България</div>
+            <div className="text-sm font-medium text-gray-800">Силистра и региона</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Реклама */}
+      <div className="mt-4 card p-5">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-0.5">Връзка за реклама</div>
+            <div className="text-sm font-medium text-gray-800">obshtestvenpuls@gmail.com</div>
+            <div className="text-xs text-gray-400 mt-0.5">За рекламни запитвания и партньорства</div>
           </div>
         </div>
       </div>
