@@ -15,6 +15,7 @@ export default function AdminPolls() {
   const [expandedId, setExpandedId] = useState(null)
   const [imageFile, setImageFile] = useState(null)
   const [publishingResults, setPublishingResults] = useState(null)
+  const [summaryForm, setSummaryForm] = useState(null) // { pollId, text }
   const imageRef = useRef()
 
   async function loadPolls() {
@@ -107,15 +108,20 @@ export default function AdminPolls() {
     setExpandedId(poll.id)
   }
 
-  async function publishResults(poll) {
+  function openSummaryForm(poll) {
+    setSummaryForm({ pollId: poll.id, text: '' })
+  }
+
+  async function confirmPublish() {
+    const poll = polls.find(p => p.id === summaryForm.pollId)
     setPublishingResults(poll.id)
     const { results } = await pollsApi.getOne(poll.id)
     setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
-    // Затвори анкетата И публикувай резултатите наведнъж
-    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true })
-    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true } : p))
+    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true, result_summary: summaryForm.text || null })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true, result_summary: summaryForm.text } : p))
     setExpandedId(poll.id)
     setPublishingResults(null)
+    setSummaryForm(null)
   }
 
   return (
@@ -319,7 +325,7 @@ export default function AdminPolls() {
                     </button>
                     {!poll.results_published && (
                       <button
-                        onClick={() => publishResults(poll)}
+                        onClick={() => openSummaryForm(poll)}
                         disabled={publishingResults === poll.id}
                         className="text-sm text-blue-700 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
                       >
@@ -353,7 +359,7 @@ export default function AdminPolls() {
                     <h4 className="font-semibold text-navy-700 text-sm">Резултати от анкетата</h4>
                     {!poll.results_published && (
                       <button
-                        onClick={() => publishResults(poll)}
+                        onClick={() => openSummaryForm(poll)}
                         disabled={publishingResults === poll.id}
                         className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-medium transition-colors"
                       >
@@ -366,6 +372,33 @@ export default function AdminPolls() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Модал за обобщаващ текст */}
+      {summaryForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-bold text-navy-700 mb-2">Публикуване на резултати</h3>
+            <p className="text-sm text-gray-500 mb-4">Добавете кратко обобщение на резултатите (незадължително).</p>
+            <textarea
+              className="input resize-none w-full"
+              rows={4}
+              placeholder="Пример: По-голямата част от гласувалите подкрепят..."
+              value={summaryForm.text}
+              onChange={e => setSummaryForm(s => ({ ...s, text: e.target.value }))}
+            />
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={confirmPublish}
+                disabled={publishingResults !== null}
+                className="btn-primary flex-1"
+              >
+                {publishingResults ? 'Публикуване...' : 'Публикувай'}
+              </button>
+              <button onClick={() => setSummaryForm(null)} className="btn-outline flex-1">Отказ</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

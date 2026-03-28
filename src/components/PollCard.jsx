@@ -90,7 +90,15 @@ export default function PollCard({ poll, showResults = false }) {
 
         {/* Резултати — показват се само ако анкетата е приключила И резултатите са публикувани */}
         {showResultsPublic && (
-          <PollChart results={results || poll.results} options={poll.options} />
+          <>
+            <PollChart results={results || poll.results} options={poll.options} />
+            {poll.result_summary && (
+              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <p className="text-sm font-semibold text-blue-800 mb-1">Обобщение</p>
+                <p className="text-sm text-blue-700">{poll.result_summary}</p>
+              </div>
+            )}
+          </>
         )}
 
         {/* Приключила анкета, но резултатите още не са публикувани */}

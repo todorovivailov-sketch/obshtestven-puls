@@ -165,7 +165,7 @@ export const handler = async (event) => {
       const token = event.headers.authorization?.replace('Bearer ', '')
       if (!verifyAdmin(token)) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Неоторизиран' }) }
 
-      const { id, status, question, description, start_date, end_date, results_published } = JSON.parse(event.body)
+      const { id, status, question, description, start_date, end_date, results_published, result_summary } = JSON.parse(event.body)
       const updateFields = {}
       if (status !== undefined) updateFields.status = status
       if (question !== undefined) updateFields.question = question
@@ -173,6 +173,7 @@ export const handler = async (event) => {
       if (start_date !== undefined) updateFields.start_date = start_date
       if (end_date !== undefined) updateFields.end_date = end_date
       if (results_published !== undefined) updateFields.results_published = results_published
+      if (result_summary !== undefined) updateFields.result_summary = result_summary
 
       const { data, error } = await supabase
         .from('polls').update(updateFields).eq('id', id).select().single()
