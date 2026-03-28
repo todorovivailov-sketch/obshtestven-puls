@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     Promise.all([
       pollsApi.getAll('active'),
-      pollsApi.getAll('closed', true),
+      pollsApi.getAll('all', true),
       articlesApi.getAll(),
     ]).then(([active, closed, arts]) => {
       setActivePolls(Array.isArray(active) ? active : [])

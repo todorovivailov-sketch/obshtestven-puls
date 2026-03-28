@@ -84,17 +84,15 @@ export const handler = async (event) => {
       const { data: options } = await supabase
         .from('poll_options').select('*').in('poll_id', pollIds).order('position')
 
-      // Вземи резултати за приключили анкети
+      // Вземи резултати за всички анкети в резултатния изглед
       let resultsMap = {}
-      if (status === 'closed' || status === 'all') {
-        const { data: allResults } = await supabase
-          .from('poll_results').select('*').in('poll_id', pollIds)
-        if (allResults) {
-          allResults.forEach(r => {
-            if (!resultsMap[r.poll_id]) resultsMap[r.poll_id] = []
-            resultsMap[r.poll_id].push(r)
-          })
-        }
+      const { data: allResults } = await supabase
+        .from('poll_results').select('*').in('poll_id', pollIds)
+      if (allResults) {
+        allResults.forEach(r => {
+          if (!resultsMap[r.poll_id]) resultsMap[r.poll_id] = []
+          resultsMap[r.poll_id].push(r)
+        })
       }
 
       const polls = data.map(p => ({

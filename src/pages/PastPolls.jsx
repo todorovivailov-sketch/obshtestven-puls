@@ -7,7 +7,7 @@ export default function Rezultati() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    pollsApi.getAll('closed', true).then(data => {
+    pollsApi.getAll('all', true).then(data => {
       setPolls(Array.isArray(data) ? data : [])
       setLoading(false)
     })
