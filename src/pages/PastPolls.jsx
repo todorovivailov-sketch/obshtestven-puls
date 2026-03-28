@@ -2,22 +2,43 @@ import { useEffect, useState } from 'react'
 import PollCard from '../components/PollCard'
 import { pollsApi } from '../lib/api'
 
+const CATEGORIES = ['Всички', 'Политика', 'Общество', 'Култура', 'Медии', 'Развлечения']
+
 export default function Rezultati() {
   const [polls, setPolls] = useState([])
   const [loading, setLoading] = useState(true)
+  const [category, setCategory] = useState('Всички')
 
   useEffect(() => {
-    pollsApi.getAll('all', true).then(data => {
+    setLoading(true)
+    pollsApi.getAll('all', true, category === 'Всички' ? '' : category).then(data => {
       setPolls(Array.isArray(data) ? data : [])
       setLoading(false)
     })
-  }, [])
+  }, [category])
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-navy-700 mb-2">Резултати</h1>
         <p className="text-gray-500">Резултати от приключили анкети с графики и данни.</p>
+      </div>
+
+      {/* Категории */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setCategory(cat)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              category === cat
+                ? 'bg-navy-700 text-white border-navy-700'
+                : 'bg-white text-gray-600 border-gray-300 hover:border-navy-400 hover:text-navy-700'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {loading ? (

@@ -13,8 +13,8 @@ function authHeaders() {
 
 // АНКЕТИ
 export const pollsApi = {
-  getAll: (status = 'active', publishedOnly = false) =>
-    fetch(`${BASE}/polls?status=${status}${publishedOnly ? '&published=true' : ''}`).then(r => r.json()),
+  getAll: (status = 'active', publishedOnly = false, category = '') =>
+    fetch(`${BASE}/polls?status=${status}${publishedOnly ? '&published=true' : ''}${category ? `&category=${encodeURIComponent(category)}` : ''}`).then(r => r.json()),
 
   getOne: (id) =>
     fetch(`${BASE}/polls?id=${id}`).then(r => r.json()),

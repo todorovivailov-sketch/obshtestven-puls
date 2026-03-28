@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from 'react'
 import { pollsApi } from '../../lib/api'
 import PollChart from '../../components/PollChart'
 
-const EMPTY_FORM = { question: '', description: '', start_date: '', end_date: '', options: ['', ''] }
+const CATEGORIES = ['Политика', 'Общество', 'Култура', 'Медии', 'Развлечения']
+const EMPTY_FORM = { question: '', description: '', category: 'Политика', start_date: '', end_date: '', options: ['', ''] }
 
 export default function AdminPolls() {
   const [polls, setPolls] = useState([])
@@ -57,6 +58,7 @@ export default function AdminPolls() {
     if (imageFile) {
       const fd = new FormData()
       fd.append('question', form.question)
+      fd.append('category', form.category || 'Политика')
       fd.append('description', form.description || '')
       if (form.start_date) fd.append('start_date', form.start_date)
       if (form.end_date) fd.append('end_date', form.end_date)
@@ -66,6 +68,7 @@ export default function AdminPolls() {
     } else {
       payload = {
         question: form.question,
+        category: form.category || 'Политика',
         description: form.description,
         start_date: form.start_date || null,
         end_date: form.end_date || null,
@@ -139,6 +142,17 @@ export default function AdminPolls() {
                 placeholder="Въведете въпроса на анкетата..."
                 required
               />
+            </div>
+
+            <div>
+              <label className="label">Категория *</label>
+              <select
+                className="input"
+                value={form.category}
+                onChange={e => setForm({ ...form, category: e.target.value })}
+              >
+                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
 
             <div>

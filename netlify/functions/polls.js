@@ -71,9 +71,11 @@ export const handler = async (event) => {
 
       // Всички анкети
       const published = event.queryStringParameters?.published
+      const category = event.queryStringParameters?.category
       let query = supabase.from('polls').select('*').order('created_at', { ascending: false })
       if (status !== 'all') query = query.eq('status', status)
       if (published === 'true') query = query.eq('results_published', true)
+      if (category) query = query.eq('category', category)
       const { data, error } = await query
       if (error) throw error
 
@@ -111,11 +113,12 @@ export const handler = async (event) => {
 
       const contentType = event.headers['content-type'] || event.headers['Content-Type'] || ''
 
-      let question, description, start_date, end_date, options, image_url
+      let question, description, category, start_date, end_date, options, image_url
 
       if (contentType.includes('multipart/form-data')) {
         const { fields, fileBuffer, fileName, fileMime } = await parseFormData(event)
         question = fields.question
+        category = fields.category || 'Политика'
         description = fields.description || null
         start_date = fields.start_date || null
         end_date = fields.end_date || null
@@ -136,6 +139,7 @@ export const handler = async (event) => {
       } else {
         const parsed = JSON.parse(event.body)
         question = parsed.question
+        category = parsed.category || 'Политика'
         description = parsed.description || null
         start_date = parsed.start_date || null
         end_date = parsed.end_date || null
@@ -146,7 +150,7 @@ export const handler = async (event) => {
       if (!question || !options?.length) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Липсват данни' }) }
 
       const { data: poll, error: pe } = await supabase
-        .from('polls').insert({ question, description, start_date, end_date, image_url }).select().single()
+        .from('polls').insert({ question, category, description, start_date, end_date, image_url }).select().single()
       if (pe) throw pe
 
       const optRows = options.map((label, i) => ({ poll_id: poll.id, label, position: i }))
