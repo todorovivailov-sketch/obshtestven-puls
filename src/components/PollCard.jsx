@@ -10,7 +10,7 @@ export default function PollCard({ poll, showResults = false }) {
   const [error, setError] = useState(null)
 
   const isClosed = poll.status === 'closed'
-  const showResultsPublic = isClosed && poll.results_published
+  const showResultsPublic = showResults || (isClosed && poll.results_published)
 
   async function handleVote() {
     if (!selected || loading) return

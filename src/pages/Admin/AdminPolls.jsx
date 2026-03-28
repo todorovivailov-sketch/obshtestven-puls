@@ -106,13 +106,11 @@ export default function AdminPolls() {
 
   async function publishResults(poll) {
     setPublishingResults(poll.id)
-    // Load results first if not loaded
-    if (!poll.results) {
-      const { results } = await pollsApi.getOne(poll.id)
-      setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
-    }
-    await pollsApi.update({ id: poll.id, results_published: true })
-    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results_published: true } : p))
+    const { results } = await pollsApi.getOne(poll.id)
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
+    // Затвори анкетата И публикувай резултатите наведнъж
+    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true } : p))
     setExpandedId(poll.id)
     setPublishingResults(null)
   }
@@ -305,7 +303,7 @@ export default function AdminPolls() {
                     >
                       {expandedId === poll.id ? 'Скрий' : 'Резултати'}
                     </button>
-                    {poll.status === 'closed' && !poll.results_published && (
+                    {!poll.results_published && (
                       <button
                         onClick={() => publishResults(poll)}
                         disabled={publishingResults === poll.id}
