@@ -51,29 +51,21 @@ export default function AdminArticles() {
     setSaving(true)
     setError(null)
 
-    let docx_url = form.docx_url || null
-
     try {
-      // Качване на оригинален docx
+      let image_url = null
+      let docx_url = null
+
+      // Качи снимката директно към Supabase
+      if (imageFile) {
+        image_url = await uploadApi.uploadFile(imageFile, 'article-images')
+      }
+
+      // Качи docx директно към Supabase
       if (docxFile) {
         docx_url = await uploadApi.uploadFile(docxFile, 'article-docs')
       }
 
-      // Използваме FormData когато има снимка
-      let res
-      if (imageFile) {
-        const fd = new FormData()
-        fd.append('title', form.title)
-        fd.append('author', form.author || '')
-        fd.append('body', form.body)
-        fd.append('category', form.category)
-        fd.append('published', form.published ? 'true' : 'false')
-        if (docx_url) fd.append('docx_url', docx_url)
-        fd.append('image', imageFile)
-        res = await articlesApi.createWithFormData(fd)
-      } else {
-        res = await articlesApi.create({ ...form, docx_url })
-      }
+      const res = await articlesApi.create({ ...form, image_url, docx_url })
 
       if (res.id) {
         setForm(EMPTY_FORM)
@@ -85,7 +77,7 @@ export default function AdminArticles() {
         setError(res.error || 'Грешка при запис')
       }
     } catch (err) {
-      setError('Грешка при качване на файл.')
+      setError('Грешка при качване: ' + err.message)
     }
     setSaving(false)
   }

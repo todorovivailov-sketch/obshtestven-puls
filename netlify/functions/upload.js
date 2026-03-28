@@ -5,7 +5,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 )
 
-// Тази функция връща signed upload URL за Supabase Storage
 export const handler = async (event) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -22,10 +21,11 @@ export const handler = async (event) => {
 
   try {
     const { filename, contentType, bucket } = JSON.parse(event.body)
-    const validBuckets = ['article-images', 'article-docs']
+    const validBuckets = ['article-images', 'article-docs', 'poll-images']
     if (!validBuckets.includes(bucket)) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Невалиден bucket' }) }
 
-    const path = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9._-]/g, '_')}`
+    const ext = filename.split('.').pop().toLowerCase()
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
     const { data, error } = await supabase.storage
       .from(bucket)
@@ -38,7 +38,7 @@ export const handler = async (event) => {
     return { statusCode: 200, headers, body: JSON.stringify({ signedUrl: data.signedUrl, path, publicUrl }) }
   } catch (err) {
     console.error(err)
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Грешка при upload' }) }
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Грешка при upload: ' + err.message }) }
   }
 }
 

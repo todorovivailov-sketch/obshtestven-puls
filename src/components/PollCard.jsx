@@ -37,6 +37,13 @@ export default function PollCard({ poll, showResults = false }) {
 
   return (
     <div className="card">
+      {/* Снимка */}
+      {poll.image_url && (
+        <div className="h-48 overflow-hidden">
+          <img src={poll.image_url} alt={poll.question} className="w-full h-full object-cover" />
+        </div>
+      )}
+
       {/* Хедър */}
       <div className="bg-gradient-to-r from-navy-700 to-navy-600 p-5">
         <div className="flex items-start justify-between gap-3">

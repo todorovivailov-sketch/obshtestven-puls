@@ -71,20 +71,28 @@ export const articlesApi = {
     fetch(`${BASE}/articles`, { method: 'DELETE', headers: authHeaders(), body: JSON.stringify({ id }) }).then(r => r.json()),
 }
 
-// UPLOAD
+// UPLOAD — директно към Supabase Storage чрез signed URL
 export const uploadApi = {
-  getSignedUrl: (filename, contentType, bucket) =>
-    fetch(`${BASE}/upload`, {
+  uploadFile: async (file, bucket) => {
+    // 1. Вземи signed URL от нашата функция
+    const res = await fetch(`${BASE}/upload`, {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({ filename, contentType, bucket }),
-    }).then(r => r.json()),
+      body: JSON.stringify({ filename: file.name, contentType: file.type, bucket }),
+    }).then(r => r.json())
 
-  uploadFile: async (file, bucket) => {
-    const { signedUrl, publicUrl, error } = await uploadApi.getSignedUrl(file.name, file.type, bucket)
-    if (error) throw new Error(error)
-    await fetch(signedUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } })
-    return publicUrl
+    if (res.error) throw new Error(res.error)
+
+    // 2. Качи директно към Supabase (заобикаля Netlify лимита)
+    const uploadRes = await fetch(res.signedUrl, {
+      method: 'PUT',
+      body: file,
+      headers: { 'Content-Type': file.type },
+    })
+
+    if (!uploadRes.ok) throw new Error('Грешка при качване на файла')
+
+    return res.publicUrl
   },
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { pollsApi } from '../../lib/api'
+import { pollsApi, uploadApi } from '../../lib/api'
 import PollChart from '../../components/PollChart'
 
 const CATEGORIES = ['Политика', 'Общество', 'Култура', 'Медии', 'Развлечения']
@@ -55,29 +55,28 @@ export default function AdminPolls() {
     setSaving(true)
     setError(null)
 
-    let payload
+    let image_url = null
     if (imageFile) {
-      const fd = new FormData()
-      fd.append('question', form.question)
-      fd.append('category', form.category || 'Политика')
-      fd.append('description', form.description || '')
-      if (form.start_date) fd.append('start_date', form.start_date)
-      if (form.end_date) fd.append('end_date', form.end_date)
-      fd.append('options', JSON.stringify(opts))
-      fd.append('image', imageFile)
-      payload = fd
-    } else {
-      payload = {
-        question: form.question,
-        category: form.category || 'Политика',
-        description: form.description,
-        start_date: form.start_date || null,
-        end_date: form.end_date || null,
-        options: opts,
+      try {
+        image_url = await uploadApi.uploadFile(imageFile, 'poll-images')
+      } catch (err) {
+        setError('Грешка при качване на снимката: ' + err.message)
+        setSaving(false)
+        return
       }
     }
 
-    const res = await pollsApi.create(payload, !!imageFile)
+    const payload = {
+      question: form.question,
+      category: form.category || 'Политика',
+      description: form.description,
+      start_date: form.start_date || null,
+      end_date: form.end_date || null,
+      options: opts,
+      image_url,
+    }
+
+    const res = await pollsApi.create(payload, false)
     if (res.id) {
       setForm(EMPTY_FORM)
       setImageFile(null)
