@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import PollCard from '../components/PollCard'
 import { pollsApi } from '../lib/api'
 
-export default function PastPolls() {
+export default function Rezultati() {
   const [polls, setPolls] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    pollsApi.getAll('closed').then(data => {
+    pollsApi.getAll('closed', true).then(data => {
       setPolls(Array.isArray(data) ? data : [])
       setLoading(false)
     })
@@ -16,8 +16,8 @@ export default function PastPolls() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-navy-700 mb-2">Минали анкети</h1>
-        <p className="text-gray-500">Архив на приключили анкети с окончателните резултати.</p>
+        <h1 className="text-3xl font-bold text-navy-700 mb-2">Резултати</h1>
+        <p className="text-gray-500">Резултати от приключили анкети с графики и данни.</p>
       </div>
 
       {loading ? (
@@ -30,9 +30,9 @@ export default function PastPolls() {
         </div>
       ) : (
         <div className="card p-12 text-center">
-          <div className="text-5xl mb-4">📁</div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">Няма минали анкети</h3>
-          <p className="text-gray-500">Архивът е все още празен.</p>
+          <div className="text-5xl mb-4">📊</div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">Няма публикувани резултати</h3>
+          <p className="text-gray-500">Резултатите от приключилите анкети ще бъдат публикувани тук.</p>
         </div>
       )}
     </div>

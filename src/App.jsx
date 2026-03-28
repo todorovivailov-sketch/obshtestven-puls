@@ -21,7 +21,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="anketi" element={<Polls />} />
-        <Route path="minali-anketi" element={<PastPolls />} />
+        <Route path="rezultati" element={<PastPolls />} />
         <Route path="komentari" element={<Articles />} />
         <Route path="komentari/:id" element={<ArticlePage />} />
         <Route path="kontakti" element={<Contact />} />

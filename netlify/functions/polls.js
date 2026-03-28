@@ -70,19 +70,37 @@ export const handler = async (event) => {
       }
 
       // Всички анкети
+      const published = event.queryStringParameters?.published
       let query = supabase.from('polls').select('*').order('created_at', { ascending: false })
       if (status !== 'all') query = query.eq('status', status)
+      if (published === 'true') query = query.eq('results_published', true)
       const { data, error } = await query
       if (error) throw error
+
+      if (!data.length) return { statusCode: 200, headers, body: JSON.stringify([]) }
 
       // Вземи options за всяка анкета
       const pollIds = data.map(p => p.id)
       const { data: options } = await supabase
         .from('poll_options').select('*').in('poll_id', pollIds).order('position')
 
+      // Вземи резултати за приключили анкети
+      let resultsMap = {}
+      if (status === 'closed' || status === 'all') {
+        const { data: allResults } = await supabase
+          .from('poll_results').select('*').in('poll_id', pollIds)
+        if (allResults) {
+          allResults.forEach(r => {
+            if (!resultsMap[r.poll_id]) resultsMap[r.poll_id] = []
+            resultsMap[r.poll_id].push(r)
+          })
+        }
+      }
+
       const polls = data.map(p => ({
         ...p,
-        options: options.filter(o => o.poll_id === p.id)
+        options: options?.filter(o => o.poll_id === p.id) || [],
+        results: resultsMap[p.id] || null,
       }))
 
       return { statusCode: 200, headers, body: JSON.stringify(polls) }

@@ -4,7 +4,12 @@
       "Bash(npm create:*)",
       "Bash(npx create-vite@latest . --template react)",
       "Bash(npm install:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Read(//c/Users/Ivaylo/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/c2b2ed2b-a7df-4f6d-a2dc-017969992ed2/34901f86-4230-457e-9552-f760110abc20/skills/docx/**)",
+      "Bash(pandoc \"C:\\\\Users\\\\Ivaylo\\\\Desktop\\\\Обществен пулс.docx\" -o output.md)",
+      "Bash(python \"C:\\\\Users\\\\Ivaylo\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\c2b2ed2b-a7df-4f6d-a2dc-017969992ed2\\\\34901f86-4230-457e-9552-f760110abc20\\\\skills\\\\docx\\\\scripts\\\\office\\\\unpack.py\" \"C:\\\\Users\\\\Ivaylo\\\\Desktop\\\\Обществен пулс.docx\" \"C:\\\\Users\\\\Ivaylo\\\\Desktop\\\\obshtestven_unpacked\")",
+      "Read(//c/Users/Ivaylo/Desktop/**)",
+      "Bash(python -c \":*)"
     ]
   }
 }

@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom'
 
 const links = [
   { to: '/anketi',       label: 'Анкети' },
-  { to: '/minali-anketi', label: 'Минали анкети' },
+  { to: '/rezultati', label: 'Резултати' },
   { to: '/komentari',   label: 'Коментари и анализи' },
   { to: '/kontakti',    label: 'Контакти' },
 ]
