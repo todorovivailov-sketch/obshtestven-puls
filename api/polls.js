@@ -70,13 +70,15 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { id, status, question, description, start_date, end_date, results_published, result_summary } = req.body
+      const { id, status, question, description, category, start_date, end_date, image_url, results_published, result_summary } = req.body
       const fields = {}
       if (status !== undefined) fields.status = status
       if (question !== undefined) fields.question = question
       if (description !== undefined) fields.description = description
+      if (category !== undefined) fields.category = category
       if (start_date !== undefined) fields.start_date = start_date
       if (end_date !== undefined) fields.end_date = end_date
+      if (image_url !== undefined) fields.image_url = image_url
       if (results_published !== undefined) fields.results_published = results_published
       if (result_summary !== undefined) fields.result_summary = result_summary
 

@@ -15,8 +15,17 @@ export default function AdminPolls() {
   const [expandedId, setExpandedId] = useState(null)
   const [imageFile, setImageFile] = useState(null)
   const [publishingResults, setPublishingResults] = useState(null)
-  const [summaryForm, setSummaryForm] = useState(null) // { pollId, text }
+  const [summaryForm, setSummaryForm] = useState(null)
+
+  // Редактиране
+  const [editPoll, setEditPoll] = useState(null) // poll обект
+  const [editForm, setEditForm] = useState({})
+  const [editImageFile, setEditImageFile] = useState(null)
+  const [editSaving, setEditSaving] = useState(false)
+  const [editError, setEditError] = useState(null)
+
   const imageRef = useRef()
+  const editImageRef = useRef()
 
   async function loadPolls() {
     const [active, closed] = await Promise.all([
@@ -86,6 +95,64 @@ export default function AdminPolls() {
       setError(res.error || 'Грешка при запис')
     }
     setSaving(false)
+  }
+
+  function openEdit(poll) {
+    setEditPoll(poll)
+    setEditForm({
+      question: poll.question || '',
+      description: poll.description || '',
+      category: poll.category || 'Политика',
+      start_date: poll.start_date ? poll.start_date.split('T')[0] : '',
+      end_date: poll.end_date ? poll.end_date.split('T')[0] : '',
+      image_url: poll.image_url || '',
+    })
+    setEditImageFile(null)
+    setEditError(null)
+  }
+
+  function closeEdit() {
+    setEditPoll(null)
+    setEditForm({})
+    setEditImageFile(null)
+    setEditError(null)
+  }
+
+  async function handleEditSubmit(e) {
+    e.preventDefault()
+    if (!editForm.question.trim()) { setEditError('Въпросът е задължителен.'); return }
+    setEditSaving(true)
+    setEditError(null)
+
+    let image_url = editForm.image_url || null
+
+    if (editImageFile) {
+      try {
+        image_url = await uploadApi.uploadFile(editImageFile, 'poll-images')
+      } catch (err) {
+        setEditError('Грешка при качване на снимката: ' + err.message)
+        setEditSaving(false)
+        return
+      }
+    }
+
+    const res = await pollsApi.update({
+      id: editPoll.id,
+      question: editForm.question,
+      description: editForm.description,
+      category: editForm.category,
+      start_date: editForm.start_date || null,
+      end_date: editForm.end_date || null,
+      image_url,
+    })
+
+    if (res.id || res.success) {
+      closeEdit()
+      loadPolls()
+    } else {
+      setEditError(res.error || 'Грешка при запис')
+    }
+    setEditSaving(false)
   }
 
   async function toggleStatus(poll) {
@@ -294,6 +361,9 @@ export default function AdminPolls() {
                       {poll.results_published && (
                         <span className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-semibold">Резултатите публикувани</span>
                       )}
+                      {poll.category && (
+                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{poll.category}</span>
+                      )}
                     </div>
                     <h3 className="font-semibold text-gray-900">{poll.question}</h3>
                     <div className="flex gap-4 mt-1">
@@ -305,11 +375,6 @@ export default function AdminPolls() {
                       {poll.end_date && (
                         <p className="text-xs text-gray-400">
                           До: {new Date(poll.end_date).toLocaleDateString('bg-BG')}
-                        </p>
-                      )}
-                      {poll.ends_at && !poll.end_date && (
-                        <p className="text-xs text-gray-400">
-                          Приключва: {new Date(poll.ends_at).toLocaleDateString('bg-BG')}
                         </p>
                       )}
                     </div>
@@ -331,6 +396,12 @@ export default function AdminPolls() {
                         {publishingResults === poll.id ? 'Публикуване...' : 'Публикувай резултати'}
                       </button>
                     )}
+                    <button
+                      onClick={() => openEdit(poll)}
+                      className="text-sm text-gray-700 border border-gray-200 hover:bg-gray-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
+                    >
+                      Редактирай
+                    </button>
                     <button
                       onClick={() => toggleStatus(poll)}
                       className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-colors ${
@@ -397,6 +468,120 @@ export default function AdminPolls() {
               </button>
               <button onClick={() => setSummaryForm(null)} className="btn-outline flex-1">Отказ</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модал за редактиране на анкета */}
+      {editPoll && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 overflow-y-auto py-8">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg my-auto">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-navy-700">Редактиране на анкета</h3>
+              <button onClick={closeEdit} className="text-gray-400 hover:text-gray-600">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label className="label">Въпрос *</label>
+                <textarea
+                  className="input resize-none"
+                  rows={2}
+                  value={editForm.question}
+                  onChange={e => setEditForm(f => ({ ...f, question: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="label">Категория</label>
+                <select
+                  className="input"
+                  value={editForm.category}
+                  onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))}
+                >
+                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className="label">Описание</label>
+                <textarea
+                  className="input resize-none"
+                  rows={2}
+                  value={editForm.description}
+                  onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
+                  placeholder="Допълнителна информация..."
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Начална дата</label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={editForm.start_date}
+                    onChange={e => setEditForm(f => ({ ...f, start_date: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="label">Крайна дата</label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={editForm.end_date}
+                    onChange={e => setEditForm(f => ({ ...f, end_date: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              {/* Снимка */}
+              <div>
+                <label className="label">Снимка</label>
+                {editForm.image_url && !editImageFile && (
+                  <div className="mb-2 flex items-center gap-3">
+                    <img src={editForm.image_url} alt="" className="w-16 h-16 rounded-lg object-cover border" />
+                    <button
+                      type="button"
+                      onClick={() => setEditForm(f => ({ ...f, image_url: '' }))}
+                      className="text-xs text-crimson-600 hover:underline"
+                    >
+                      Премахни снимката
+                    </button>
+                  </div>
+                )}
+                <div
+                  className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center cursor-pointer hover:border-navy-400 transition-colors"
+                  onClick={() => editImageRef.current?.click()}
+                >
+                  {editImageFile ? (
+                    <div className="flex items-center justify-center gap-2 text-green-600">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-sm">{editImageFile.name}</span>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">{editForm.image_url ? 'Качете нова снимка (ще замени текущата)' : 'Кликнете за качване на снимка'}</p>
+                  )}
+                  <input ref={editImageRef} type="file" accept="image/*" className="hidden" onChange={e => setEditImageFile(e.target.files[0])} />
+                </div>
+              </div>
+
+              {editError && <p className="text-crimson-600 text-sm">{editError}</p>}
+
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={editSaving} className="btn-primary flex-1">
+                  {editSaving ? 'Запазване...' : 'Запази промените'}
+                </button>
+                <button type="button" onClick={closeEdit} className="btn-outline flex-1">Отказ</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
