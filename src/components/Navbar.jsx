@@ -21,10 +21,10 @@ export default function Navbar() {
               <img src="/logo.png" alt="Обществен пулс" className="w-full h-full object-contain scale-150" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-white font-bold text-xl tracking-tight">
+              <span className="text-white font-bold text-2xl tracking-tight">
                 Обществен <span className="text-crimson-400">пулс</span>
               </span>
-              <span className="text-navy-300 text-xs font-medium tracking-wide">Силистра и региона</span>
+              <span className="text-navy-300 text-sm font-medium tracking-wide">Силистра и региона</span>
             </div>
           </Link>
 

@@ -26,25 +26,25 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-navy-700 via-navy-700 to-navy-800 text-white py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="bg-gradient-to-br from-navy-700 via-navy-700 to-navy-800 text-white py-20 px-4">
+        <div className="max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-crimson-600/20 border border-crimson-500/30 text-crimson-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <span className="w-2 h-2 bg-crimson-400 rounded-full animate-pulse" />
             Граждански барометър
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
             Вашият глас.<br />
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
-          <p className="text-white/90 text-lg leading-relaxed mb-5 max-w-lg mx-auto">
+          <p className="text-white/90 text-xl leading-relaxed mb-5 max-w-3xl mx-auto">
             Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
           </p>
-          <p className="text-white/85 text-sm leading-relaxed mb-8 max-w-md mx-auto">
+          <p className="text-white/65 text-base leading-relaxed mb-10 max-w-2xl mx-auto">
             Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/anketi" className="btn-primary">Вижте анкетите</Link>
-            <Link to="/komentari" className="btn-outline border-white/40 text-white hover:bg-white hover:text-navy-700">Четете анализи</Link>
+            <Link to="/anketi" className="btn-primary px-8 py-3 text-base">Вижте анкетите</Link>
+            <Link to="/komentari" className="btn-outline border-white/40 text-white hover:bg-white hover:text-navy-700 px-8 py-3 text-base">Четете анализи</Link>
           </div>
         </div>
       </section>
