@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     const valid = await bcrypt.compare(password, passwordHash)
     if (!valid) return res.status(401).json({ error: 'Грешна парола' })
 
-    const payload = { role: 'admin', exp: Math.floor(Date.now() / 1000) + 60 * 60 * 8 }
+    const payload = { role: 'admin', exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7 }
     const token = makeJWT(payload, jwtSecret)
     return res.json({ token })
   } catch (err) {
