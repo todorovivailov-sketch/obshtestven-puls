@@ -14,15 +14,22 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const { id, category } = req.query
+      const { id, category, admin } = req.query
+
+      // Админ режим — връща всички статии вкл. непубликувани
+      const isAdmin = admin === 'true' && verifyAdmin(req.headers.authorization)
+
       if (id) {
-        const { data, error } = await supabase.from('articles').select('*').eq('id', id).eq('published', true).single()
+        let query = supabase.from('articles').select('*').eq('id', id)
+        if (!isAdmin) query = query.eq('published', true)
+        const { data, error } = await query.single()
         if (error) return res.status(404).json({ error: 'Не е намерена' })
         return res.json(data)
       }
       let query = supabase.from('articles')
-        .select('id, title, author, category, image_url, created_at')
-        .eq('published', true).order('created_at', { ascending: false })
+        .select('id, title, author, author_image_url, category, image_url, created_at, published')
+        .order('created_at', { ascending: false })
+      if (!isAdmin) query = query.eq('published', true)
       if (category) query = query.eq('category', category)
       const { data, error } = await query
       if (error) throw error
@@ -31,10 +38,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { title, author, body, category, image_url, docx_url, published } = req.body
+      const { title, author, author_image_url, body, category, image_url, docx_url, published } = req.body
       if (!title || !body) return res.status(400).json({ error: 'Липсват данни' })
       const { data, error } = await supabase.from('articles')
-        .insert({ title, author: author || null, body, category: category || 'analysis', image_url: image_url || null, docx_url: docx_url || null, published: published ?? true })
+        .insert({ title, author: author || null, author_image_url: author_image_url || null, body, category: category || 'analysis', image_url: image_url || null, docx_url: docx_url || null, published: published ?? true })
         .select().single()
       if (error) throw error
       return res.status(201).json(data)

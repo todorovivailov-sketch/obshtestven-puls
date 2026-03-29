@@ -50,8 +50,14 @@ export const articlesApi = {
   getAll: (category) =>
     fetch(`${BASE}/articles${category ? `?category=${category}` : ''}`).then(r => r.json()),
 
+  getAllAdmin: () =>
+    fetch(`${BASE}/articles?admin=true`, { headers: authHeaders() }).then(r => r.json()),
+
   getOne: (id) =>
     fetch(`${BASE}/articles?id=${id}`).then(r => r.json()),
+
+  getOneAdmin: (id) =>
+    fetch(`${BASE}/articles?id=${id}&admin=true`, { headers: authHeaders() }).then(r => r.json()),
 
   create: (data) =>
     fetch(`${BASE}/articles`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),

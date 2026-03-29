@@ -73,10 +73,18 @@ export default function ArticlePage() {
 
         {/* Мета — автор и дата */}
         <div className="flex items-center gap-4 mb-8 pb-6 border-b-2 border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-navy-700 flex items-center justify-center text-white font-bold text-sm">
-              {(article.author || 'Р').charAt(0).toUpperCase()}
-            </div>
+          <div className="flex items-center gap-3">
+            {article.author_image_url ? (
+              <img
+                src={article.author_image_url}
+                alt={article.author || 'Автор'}
+                className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 shadow-sm"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-white font-bold text-sm">
+                {(article.author || 'Р').charAt(0).toUpperCase()}
+              </div>
+            )}
             <div>
               <div className="text-sm font-semibold text-gray-800">{article.author || 'Редакция'}</div>
               <div className="text-xs text-gray-400">
