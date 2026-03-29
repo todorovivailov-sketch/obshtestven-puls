@@ -16,6 +16,9 @@ export const pollsApi = {
   getAll: (status = 'active', publishedOnly = false, category = '') =>
     fetch(`${BASE}/polls?status=${status}${publishedOnly ? '&published=true' : ''}${category ? `&category=${encodeURIComponent(category)}` : ''}`).then(r => r.json()),
 
+  getHomeResults: () =>
+    fetch(`${BASE}/polls?status=all&published=true&show_on_home=true`).then(r => r.json()),
+
   getOne: (id) =>
     fetch(`${BASE}/polls?id=${id}`).then(r => r.json()),
 

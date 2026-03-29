@@ -13,11 +13,11 @@ export default function Home() {
   useEffect(() => {
     Promise.all([
       pollsApi.getAll('active'),
-      pollsApi.getAll('all', true),
+      pollsApi.getHomeResults(),
       articlesApi.getAll(),
-    ]).then(([active, closed, arts]) => {
+    ]).then(([active, homeResults, arts]) => {
       setActivePolls(Array.isArray(active) ? active : [])
-      setClosedPolls(Array.isArray(closed) ? closed.slice(0, 2) : [])
+      setClosedPolls(Array.isArray(homeResults) ? homeResults.slice(0, 2) : [])
       setArticles(Array.isArray(arts) ? arts.slice(0, 3) : [])
       setLoading(false)
     })

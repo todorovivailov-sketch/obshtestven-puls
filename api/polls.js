@@ -26,9 +26,11 @@ export default async function handler(req, res) {
         return res.json({ poll, results })
       }
 
+      const { show_on_home } = req.query
       let query = supabase.from('polls').select('*').order('created_at', { ascending: false })
       if (status !== 'all') query = query.eq('status', status)
       if (published === 'true') query = query.eq('results_published', true)
+      if (show_on_home === 'true') query = query.eq('show_on_home', true)
       if (category) query = query.eq('category', category)
 
       const { data, error } = await query
@@ -70,7 +72,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { id, status, question, description, category, start_date, end_date, image_url, results_published, result_summary } = req.body
+      const { id, status, question, description, category, start_date, end_date, image_url, results_published, result_summary, show_on_home } = req.body
       const fields = {}
       if (status !== undefined) fields.status = status
       if (question !== undefined) fields.question = question
@@ -81,6 +83,7 @@ export default async function handler(req, res) {
       if (image_url !== undefined) fields.image_url = image_url
       if (results_published !== undefined) fields.results_published = results_published
       if (result_summary !== undefined) fields.result_summary = result_summary
+      if (show_on_home !== undefined) fields.show_on_home = show_on_home
 
       const { data, error } = await supabase.from('polls').update(fields).eq('id', id).select().single()
       if (error) throw error

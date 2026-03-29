@@ -161,6 +161,11 @@ export default function AdminPolls() {
     loadPolls()
   }
 
+  async function toggleShowOnHome(poll) {
+    await pollsApi.update({ id: poll.id, show_on_home: !poll.show_on_home })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, show_on_home: !p.show_on_home } : p))
+  }
+
   async function handleDelete(id) {
     if (!confirm('Изтрийте тази анкета? Всички гласове ще бъдат изтрити.')) return
     await pollsApi.delete(id)
@@ -183,8 +188,8 @@ export default function AdminPolls() {
     setPublishingResults(poll.id)
     const { results } = await pollsApi.getOne(poll.id)
     setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
-    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true, result_summary: summaryForm.text || null })
-    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true, result_summary: summaryForm.text } : p))
+    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true, result_summary: summaryForm.text || null, show_on_home: true })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true, result_summary: summaryForm.text, show_on_home: true } : p))
     setExpandedId(poll.id)
     setPublishingResults(null)
     setSummaryForm(null)
@@ -394,6 +399,19 @@ export default function AdminPolls() {
                         className="text-sm text-blue-700 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
                       >
                         {publishingResults === poll.id ? 'Публикуване...' : 'Публикувай резултати'}
+                      </button>
+                    )}
+                    {poll.results_published && (
+                      <button
+                        onClick={() => toggleShowOnHome(poll)}
+                        className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-colors ${
+                          poll.show_on_home
+                            ? 'text-indigo-700 border-indigo-200 bg-indigo-50 hover:bg-indigo-100'
+                            : 'text-gray-500 border-gray-200 hover:bg-gray-50'
+                        }`}
+                        title={poll.show_on_home ? 'Показва се на началната страница' : 'Скрито от началната страница'}
+                      >
+                        {poll.show_on_home ? '🏠 На начало' : '🏠 Скрито'}
                       </button>
                     )}
                     <button
