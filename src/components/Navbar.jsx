@@ -14,14 +14,14 @@ export default function Navbar() {
   return (
     <header className="bg-navy-700 shadow-lg sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Лого */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="h-11 w-11 rounded-xl overflow-hidden bg-white flex-shrink-0">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="h-14 w-14 rounded-xl overflow-hidden bg-white flex-shrink-0 shadow-md">
               <img src="/logo.png" alt="Обществен пулс" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-white font-bold text-lg tracking-tight">
+              <span className="text-white font-bold text-xl tracking-tight">
                 Обществен <span className="text-crimson-400">пулс</span>
               </span>
               <span className="text-navy-300 text-xs font-medium tracking-wide">Силистра и региона</span>
