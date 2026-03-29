@@ -32,7 +32,7 @@ export default function Home() {
             <span className="w-2 h-2 bg-crimson-400 rounded-full animate-pulse" />
             Граждански барометър
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
             Вашият глас.<br />
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
