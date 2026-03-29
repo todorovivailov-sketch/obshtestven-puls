@@ -17,7 +17,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Лого */}
           <Link to="/" className="flex items-center gap-2 group">
-            <img src="/logo.png" alt="Обществен пулс" className="h-12 w-auto object-contain rounded-lg" />
+            <div className="h-11 w-11 rounded-xl overflow-hidden bg-white flex-shrink-0">
+              <img src="/logo.png" alt="Обществен пулс" className="w-full h-full object-contain" />
+            </div>
             <div className="flex flex-col leading-tight">
               <span className="text-white font-bold text-lg tracking-tight">
                 Обществен <span className="text-crimson-400">пулс</span>
