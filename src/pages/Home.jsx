@@ -36,11 +36,10 @@ export default function Home() {
             Вашият глас.<br />
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
-          <p className="text-white font-medium text-lg mb-6 max-w-xl mx-auto leading-loose">
+          <p className="text-white/90 text-lg leading-relaxed mb-5 max-w-lg mx-auto">
             Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
           </p>
-          <div className="w-16 h-px bg-white/20 mx-auto mb-6" />
-          <p className="text-crimson-200 text-base mb-8 max-w-lg mx-auto leading-relaxed italic">
+          <p className="text-white/50 text-sm font-light leading-relaxed mb-8 max-w-md mx-auto">
             Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
