@@ -11,6 +11,9 @@ import AdminDashboard from './pages/Admin/AdminDashboard'
 import AdminPolls from './pages/Admin/AdminPolls'
 import AdminArticles from './pages/Admin/AdminArticles'
 import AdminMessages from './pages/Admin/AdminMessages'
+import AdminPolicyTranslations from './pages/Admin/AdminPolicyTranslations'
+import PolicyTranslations from './pages/PolicyTranslations'
+import PolicyTranslationPage from './pages/PolicyTranslationPage'
 import AdminLayout from './pages/Admin/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -24,6 +27,8 @@ export default function App() {
         <Route path="rezultati" element={<PastPolls />} />
         <Route path="komentari" element={<Articles />} />
         <Route path="komentari/:id" element={<ArticlePage />} />
+        <Route path="prevodach" element={<PolicyTranslations />} />
+        <Route path="prevodach/:id" element={<PolicyTranslationPage />} />
         <Route path="kontakti" element={<Contact />} />
       </Route>
 
@@ -34,6 +39,7 @@ export default function App() {
         <Route path="anketi" element={<AdminPolls />} />
         <Route path="statii" element={<AdminArticles />} />
         <Route path="saobshteniya" element={<AdminMessages />} />
+        <Route path="prevodach" element={<AdminPolicyTranslations />} />
       </Route>
     </Routes>
   )

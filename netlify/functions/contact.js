@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
+import { Resend } from 'resend'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 )
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const handler = async (event) => {
   const headers = {
@@ -23,6 +26,18 @@ export const handler = async (event) => {
 
       const { error } = await supabase.from('contact_messages').insert({ name, email, message })
       if (error) throw error
+
+      await resend.emails.send({
+        from: 'Обществен пулс <onboarding@resend.dev>',
+        to: 'obshtestvenpuls@gmail.com',
+        subject: `Ново съобщение от ${name}`,
+        html: `
+          <p><strong>Име:</strong> ${name}</p>
+          <p><strong>Имейл:</strong> ${email}</p>
+          <p><strong>Съобщение:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `,
+      })
 
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) }
     } catch (err) {

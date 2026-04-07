@@ -5,6 +5,7 @@ const links = [
   { to: '/anketi',       label: 'Анкети' },
   { to: '/rezultati', label: 'Резултати' },
   { to: '/komentari',   label: 'Коментари и анализи' },
+  { to: '/prevodach',   label: 'Преводач на политики' },
   { to: '/kontakti',    label: 'Контакти' },
 ]
 

@@ -105,6 +105,30 @@ export const uploadApi = {
   },
 }
 
+// ПРЕВОДАЧ НА ПОЛИТИКИ
+export const policyTranslationsApi = {
+  getAll: () =>
+    fetch(`${BASE}/policy-translations`).then(r => r.json()),
+
+  getAllAdmin: () =>
+    fetch(`${BASE}/policy-translations?admin=true`, { headers: authHeaders() }).then(r => r.json()),
+
+  getOne: (id) =>
+    fetch(`${BASE}/policy-translations?id=${id}`).then(r => r.json()),
+
+  getOneAdmin: (id) =>
+    fetch(`${BASE}/policy-translations?id=${id}&admin=true`, { headers: authHeaders() }).then(r => r.json()),
+
+  create: (data) =>
+    fetch(`${BASE}/policy-translations`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),
+
+  update: (data) =>
+    fetch(`${BASE}/policy-translations`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }).then(r => r.json()),
+
+  delete: (id) =>
+    fetch(`${BASE}/policy-translations`, { method: 'DELETE', headers: authHeaders(), body: JSON.stringify({ id }) }).then(r => r.json()),
+}
+
 // КОНТАКТ
 export const contactApi = {
   send: (data) =>
