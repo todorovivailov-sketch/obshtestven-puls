@@ -47,14 +47,14 @@ export default function Home() {
             <span className="w-2 h-2 bg-crimson-400 rounded-full animate-pulse" />
             Граждански барометър
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight drop-shadow-lg">
             Вашият глас.<br />
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
-          <p className="text-white/90 text-base leading-relaxed mb-5 max-w-3xl mx-auto">
+          <p className="text-white text-base leading-relaxed mb-5 max-w-3xl mx-auto drop-shadow-md" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>
             Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
           </p>
-          <p className="text-white/65 text-base leading-relaxed mb-10 max-w-2xl mx-auto">
+          <p className="text-white text-base leading-relaxed mb-10 max-w-2xl mx-auto" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>
             Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
