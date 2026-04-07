@@ -106,6 +106,7 @@ export default function AdminPolls() {
       start_date: poll.start_date ? poll.start_date.split('T')[0] : '',
       end_date: poll.end_date ? poll.end_date.split('T')[0] : '',
       image_url: poll.image_url || '',
+      options: poll.options ? poll.options.map(o => o.label) : ['', ''],
     })
     setEditImageFile(null)
     setEditError(null)
@@ -136,6 +137,9 @@ export default function AdminPolls() {
       }
     }
 
+    const opts = editForm.options.filter(o => o.trim())
+    if (opts.length < 2) { setEditError('Трябват поне 2 варианта за отговор.'); setEditSaving(false); return }
+
     const res = await pollsApi.update({
       id: editPoll.id,
       question: editForm.question,
@@ -144,6 +148,7 @@ export default function AdminPolls() {
       start_date: editForm.start_date || null,
       end_date: editForm.end_date || null,
       image_url,
+      options: opts,
     })
 
     if (res.id || res.success) {
@@ -579,6 +584,48 @@ export default function AdminPolls() {
                     onChange={e => setEditForm(f => ({ ...f, end_date: e.target.value }))}
                   />
                 </div>
+              </div>
+
+              {/* Варианти за отговор */}
+              <div>
+                <label className="label">Варианти за отговор *</label>
+                <div className="space-y-2">
+                  {(editForm.options || []).map((opt, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        className="input"
+                        value={opt}
+                        onChange={e => {
+                          const opts = [...editForm.options]
+                          opts[i] = e.target.value
+                          setEditForm(f => ({ ...f, options: opts }))
+                        }}
+                        placeholder={`Вариант ${i + 1}`}
+                      />
+                      {editForm.options.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => setEditForm(f => ({ ...f, options: f.options.filter((_, idx) => idx !== i) }))}
+                          className="px-3 py-2 text-crimson-600 hover:bg-crimson-50 rounded-lg transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditForm(f => ({ ...f, options: [...(f.options || []), ''] }))}
+                  className="mt-3 text-sm text-navy-600 hover:text-navy-800 font-medium flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Добави вариант
+                </button>
               </div>
 
               {/* Снимка */}

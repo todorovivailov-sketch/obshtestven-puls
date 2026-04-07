@@ -87,6 +87,14 @@ export default async function handler(req, res) {
 
       const { data, error } = await supabase.from('polls').update(fields).eq('id', id).select().single()
       if (error) throw error
+
+      // Ако са изпратени нови опции — изтрий старите и вкарай новите
+      if (req.body.options && Array.isArray(req.body.options)) {
+        await supabase.from('poll_options').delete().eq('poll_id', id)
+        const optRows = req.body.options.filter(l => l.trim()).map((label, i) => ({ poll_id: id, label, position: i }))
+        if (optRows.length) await supabase.from('poll_options').insert(optRows)
+      }
+
       return res.json(data)
     }
 
