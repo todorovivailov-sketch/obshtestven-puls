@@ -26,8 +26,23 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-navy-700 via-navy-700 to-navy-800 text-white py-20 px-4">
-        <div className="max-w-5xl mx-auto text-center">
+      <section className="relative text-white py-20 px-4 overflow-hidden" style={{ minHeight: '420px' }}>
+        {/* Видео фон */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+
+        {/* Тъмен overlay */}
+        <div className="absolute inset-0 bg-navy-900/70 z-10" />
+
+        {/* Съдържание */}
+        <div className="relative z-20 max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-crimson-600/20 border border-crimson-500/30 text-crimson-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <span className="w-2 h-2 bg-crimson-400 rounded-full animate-pulse" />
             Граждански барометър

@@ -10,7 +10,9 @@
       "Bash(python \"C:\\\\Users\\\\Ivaylo\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\c2b2ed2b-a7df-4f6d-a2dc-017969992ed2\\\\34901f86-4230-457e-9552-f760110abc20\\\\skills\\\\docx\\\\scripts\\\\office\\\\unpack.py\" \"C:\\\\Users\\\\Ivaylo\\\\Desktop\\\\Обществен пулс.docx\" \"C:\\\\Users\\\\Ivaylo\\\\Desktop\\\\obshtestven_unpacked\")",
       "Read(//c/Users/Ivaylo/Desktop/**)",
       "Bash(python -c \":*)",
-      "Bash(python -c \"import sys; sys.stdout.buffer.write\\(sys.stdin.buffer.read\\(\\)\\)\")"
+      "Bash(python -c \"import sys; sys.stdout.buffer.write\\(sys.stdin.buffer.read\\(\\)\\)\")",
+      "Bash(dir \"C:\\\\Users\\\\Ivaylo\\\\Downloads\\\\Видео_с_име_на_приложението.mp4\")",
+      "Bash(copy \"C:\\\\Users\\\\Ivaylo\\\\Downloads\\\\Видео_с_име_на_приложението.mp4\" \"D:\\\\PROJECTS\\\\Обществен пулс\\\\public\\\\hero-video.mp4\")"
     ]
   }
 }
