@@ -43,6 +43,7 @@ export default function Home() {
 
         {/* Съдържание */}
         <div className="relative z-20 max-w-5xl mx-auto text-center">
+          <div className="absolute inset-0 -mx-8 -my-6 rounded-2xl bg-black/40 backdrop-blur-sm -z-10" />
           <div className="inline-flex items-center gap-2 bg-crimson-600/20 border border-crimson-500/30 text-crimson-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <span className="w-2 h-2 bg-crimson-400 rounded-full animate-pulse" />
             Граждански барометър
