@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative text-white py-20 px-4 overflow-hidden" style={{ minHeight: '420px' }}>
+      <section className="relative text-white py-28 px-4 overflow-hidden" style={{ minHeight: '520px' }}>
         {/* Видео фон */}
         <video
           autoPlay
@@ -39,7 +39,7 @@ export default function Home() {
         </video>
 
         {/* Тъмен overlay */}
-        <div className="absolute inset-0 bg-navy-900/70 z-10" />
+        <div className="absolute inset-0 bg-navy-900/52 z-10" />
 
         {/* Съдържание */}
         <div className="relative z-20 max-w-5xl mx-auto text-center">
