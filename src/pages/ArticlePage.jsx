@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { articlesApi } from '../lib/api'
 
 function formatBody(body) {
@@ -57,8 +58,23 @@ export default function ArticlePage() {
     )
   }
 
+  const siteUrl = 'https://obshtestven-puls.vercel.app'
+  const plainText = article.body.replace(/<[^>]+>/g, '').slice(0, 160)
+
   return (
     <div className="bg-white min-h-screen">
+      <Helmet>
+        <title>{article.title} — Обществен пулс</title>
+        <meta property="og:title" content={article.title} />
+        <meta property="og:description" content={plainText} />
+        <meta property="og:image" content={article.image_url || `${siteUrl}/logo.png`} />
+        <meta property="og:url" content={`${siteUrl}/komentari/${article.id}`} />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:description" content={plainText} />
+        <meta name="twitter:image" content={article.image_url || `${siteUrl}/logo.png`} />
+      </Helmet>
       <article className="max-w-3xl mx-auto px-4 py-10">
 
         {/* Breadcrumb */}

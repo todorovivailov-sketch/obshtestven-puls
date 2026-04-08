@@ -5,6 +5,7 @@ import Polls from './pages/Polls'
 import PastPolls from './pages/PastPolls'
 import Articles from './pages/Articles'
 import ArticlePage from './pages/ArticlePage'
+import PollPage from './pages/PollPage'
 import Contact from './pages/Contact'
 import AdminLogin from './pages/Admin/AdminLogin'
 import AdminDashboard from './pages/Admin/AdminDashboard'
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="anketi" element={<Polls />} />
+        <Route path="anketi/:id" element={<PollPage />} />
         <Route path="rezultati" element={<PastPolls />} />
         <Route path="komentari" element={<Articles />} />
         <Route path="komentari/:id" element={<ArticlePage />} />
