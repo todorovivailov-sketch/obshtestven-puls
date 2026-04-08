@@ -39,12 +39,21 @@ export const pollsApi = {
 }
 
 // ГЛАСУВАНЕ
+function getVoterId() {
+  let id = localStorage.getItem('voter_id')
+  if (!id) {
+    id = crypto.randomUUID()
+    localStorage.setItem('voter_id', id)
+  }
+  return id
+}
+
 export const voteApi = {
   vote: (poll_id, option_id) =>
     fetch(`${BASE}/vote`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ poll_id, option_id }),
+      body: JSON.stringify({ poll_id, option_id, voter_id: getVoterId() }),
     }).then(r => r.json()),
 }
 

@@ -18,8 +18,10 @@ export default async function handler(req, res) {
     const { poll_id, option_id } = req.body
     if (!poll_id || !option_id) return res.status(400).json({ error: 'Липсват данни' })
 
+    const { voter_id } = req.body
     const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown'
-    const ip_hash = createHash('sha256').update(ip + poll_id).digest('hex')
+    const identifier = voter_id || ip
+    const ip_hash = createHash('sha256').update(identifier + poll_id).digest('hex')
 
     const { error } = await supabase.from('votes').insert({ poll_id, option_id, ip_hash })
 

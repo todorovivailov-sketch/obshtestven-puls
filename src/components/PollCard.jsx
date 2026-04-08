@@ -22,7 +22,6 @@ export default function PollCard({ poll, showResults = false }) {
       if (res.error) {
         if (res.already_voted) {
           setError('Вече сте гласували по тази анкета.')
-          setVoted(true)
         } else {
           setError(res.error)
         }
