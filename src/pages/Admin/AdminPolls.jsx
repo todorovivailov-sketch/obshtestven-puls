@@ -483,7 +483,7 @@ export default function AdminPolls() {
                       </button>
                     )}
                   </div>
-                  <PollChart results={poll.results} options={poll.options} />
+                  <PollChart results={poll.results} options={poll.options} showVotes={true} />
                 </div>
               )}
             </div>

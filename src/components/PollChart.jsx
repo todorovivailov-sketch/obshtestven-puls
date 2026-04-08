@@ -14,14 +14,14 @@ const COLORS = [
   '#BE185D', // розово
 ]
 
-function CustomTooltip({ active, payload }) {
+function CustomTooltip({ active, payload, showVotes }) {
   if (active && payload && payload.length) {
     const d = payload[0].payload
     return (
       <div className="bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3 text-sm">
         <p className="font-semibold text-gray-800 mb-1">{d.label}</p>
         <p className="text-navy-700"><span className="font-bold text-lg">{d.percent}%</span></p>
-        <p className="text-gray-500">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</p>
+        {showVotes && <p className="text-gray-500">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</p>}
       </div>
     )
   }
@@ -41,7 +41,7 @@ function CustomLegend({ data }) {
   )
 }
 
-export default function PollChart({ results, options }) {
+export default function PollChart({ results, options, showVotes = false }) {
   if (!results?.length && !options?.length) {
     return <p className="text-gray-500 text-sm text-center py-6">Все още няма гласове.</p>
   }
@@ -68,7 +68,10 @@ export default function PollChart({ results, options }) {
       {/* Заглавна статистика */}
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-500">
-          Общо гласове: <span className="text-navy-700 font-bold text-base">{total}</span>
+          {showVotes
+            ? <>Общо гласове: <span className="text-navy-700 font-bold text-base">{total}</span></>
+            : <span className="text-navy-700 font-medium">Резултати</span>
+          }
         </div>
         {winner && total > 0 && (
           <div className="text-xs text-gray-500 bg-gray-100 rounded-lg px-3 py-1">
@@ -90,7 +93,7 @@ export default function PollChart({ results, options }) {
                 <span className="font-medium text-gray-800">{d.label}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-xs">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</span>
+                {showVotes && <span className="text-gray-400 text-xs">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</span>}
                 <span className="font-bold text-navy-700 w-12 text-right">{d.percent}%</span>
               </div>
             </div>
@@ -131,7 +134,7 @@ export default function PollChart({ results, options }) {
                   tickLine={false}
                   tickFormatter={v => `${v}`}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+                <Tooltip content={<CustomTooltip showVotes={showVotes} />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
                 <Bar dataKey="votes" radius={[8, 8, 0, 0]} isAnimationActive animationDuration={800}>
                   {data.map((d, i) => <Cell key={i} fill={d.color} />)}
                   <LabelList
