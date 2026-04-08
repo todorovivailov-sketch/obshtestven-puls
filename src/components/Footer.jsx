@@ -37,7 +37,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Обществен пулс. Всички права запазени.
           </div>
           <a
-            href="#"
+            href="https://www.facebook.com/share/18PRE7SPUn/"
             target="_blank"
             rel="noopener noreferrer"
             className="w-9 h-9 bg-navy-600 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors"
