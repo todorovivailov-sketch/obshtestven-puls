@@ -19,6 +19,7 @@ export default function Footer() {
               <li><Link to="/anketi" className="hover:text-white transition-colors">Анкети</Link></li>
               <li><Link to="/rezultati" className="hover:text-white transition-colors">Резултати</Link></li>
               <li><Link to="/komentari" className="hover:text-white transition-colors">Коментари и анализи</Link></li>
+              <li><Link to="/predlozheniya" className="hover:text-white transition-colors">Предложения за анкети</Link></li>
               <li><Link to="/kontakti" className="hover:text-white transition-colors">Контакти</Link></li>
             </ul>
           </div>

@@ -7,6 +7,7 @@ import Articles from './pages/Articles'
 import ArticlePage from './pages/ArticlePage'
 import PollPage from './pages/PollPage'
 import Contact from './pages/Contact'
+import Suggestions from './pages/Suggestions'
 import AdminLogin from './pages/Admin/AdminLogin'
 import AdminDashboard from './pages/Admin/AdminDashboard'
 import AdminPolls from './pages/Admin/AdminPolls'
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="prevodach" element={<PolicyTranslations />} />
         <Route path="prevodach/:id" element={<PolicyTranslationPage />} />
         <Route path="kontakti" element={<Contact />} />
+        <Route path="predlozheniya" element={<Suggestions />} />
       </Route>
 
       {/* Админ */}
