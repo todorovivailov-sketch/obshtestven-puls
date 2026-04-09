@@ -56,6 +56,20 @@ export default function PollCard({ poll, showResults = false }) {
         {poll.description && (
           <p className="text-navy-200 text-sm mt-2">{poll.description}</p>
         )}
+        {(poll.start_date || poll.end_date) && (
+          <div className="flex items-center gap-3 mt-2 text-xs text-navy-300">
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {poll.start_date && (
+              <span>От: {new Date(poll.start_date).toLocaleDateString('bg-BG')}</span>
+            )}
+            {poll.start_date && poll.end_date && <span>—</span>}
+            {poll.end_date && (
+              <span>До: {new Date(poll.end_date).toLocaleDateString('bg-BG')}</span>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="p-5">
