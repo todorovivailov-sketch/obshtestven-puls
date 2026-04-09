@@ -27,7 +27,6 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><span>Анонимно гласуване</span></li>
               <li><span>Не е социологическо проучване</span></li>
-              <li><Link to="/admin/login" className="hover:text-white transition-colors text-navy-300">Администрация</Link></li>
             </ul>
           </div>
         </div>
