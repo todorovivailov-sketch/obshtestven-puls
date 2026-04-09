@@ -31,13 +31,13 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-0.5">
             {links.map(l => (
               <NavLink
                 key={l.to}
                 to={l.to}
                 className={({ isActive }) =>
-                  `px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
+                  `px-3 py-2 rounded-lg text-xs font-medium transition-colors duration-150 whitespace-nowrap ${
                     isActive
                       ? 'bg-white/15 text-white'
                       : 'text-navy-200 hover:text-white hover:bg-white/10'
