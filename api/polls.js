@@ -22,8 +22,9 @@ export default async function handler(req, res) {
       if (id) {
         const { data: poll, error: pe } = await supabase.from('polls').select('*').eq('id', id).single()
         if (pe) return res.status(404).json({ error: 'Не е намерена' })
+        const { data: options } = await supabase.from('poll_options').select('*').eq('poll_id', id).order('position')
         const { data: results } = await supabase.from('poll_results').select('*').eq('poll_id', id)
-        return res.json({ poll, results })
+        return res.json({ poll: { ...poll, options: options || [] }, results })
       }
 
       const { show_on_home } = req.query
