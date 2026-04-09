@@ -11,7 +11,7 @@ export default function PollPage() {
 
   useEffect(() => {
     pollsApi.getOne(id).then(data => {
-      setPoll(data.poll || null)
+      setPoll(data.poll ? { ...data.poll, results: data.results } : null)
       setLoading(false)
     })
   }, [id])
