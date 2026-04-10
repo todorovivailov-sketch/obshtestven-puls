@@ -19,12 +19,20 @@ export default async function handler(req, res) {
   const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|vkshare/i.test(ua)
   const { type, id } = req.query
 
-  // Обикновен потребител → зарежда React приложението
+  // Обикновен потребител → сервира index.html директно (без redirect за да избегнем loop)
   if (!isCrawler) {
-    const paths = { poll: `/anketi/${id}`, article: `/komentari/${id}`, policy: `/prevodach/${id}` }
-    const target = paths[type] || '/'
-    res.setHeader('Content-Type', 'text/html')
-    return res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><script>window.location.replace('${target}')</script></head><body></body></html>`)
+    const fs = await import('fs')
+    const path = await import('path')
+    const indexPath = path.join(process.cwd(), 'dist', 'index.html')
+    try {
+      const html = fs.readFileSync(indexPath, 'utf-8')
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      return res.send(html)
+    } catch {
+      // fallback ако dist не е наличен
+      res.setHeader('Content-Type', 'text/html')
+      return res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><script>window.location.href='/'</script></head><body></body></html>`)
+    }
   }
 
   // Facebook/Twitter crawler → OG HTML
