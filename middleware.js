@@ -40,7 +40,7 @@ async function sbFetchAll(path) {
   return res.json()
 }
 
-function chartImageUrl(results) {
+async function chartImageUrl(results) {
   const labels = results.map(r => r.label)
   const votes = results.map(r => Number(r.vote_count))
   const percents = results.map(r => Number(r.percentage))
@@ -73,6 +73,17 @@ function chartImageUrl(results) {
       },
     },
   }
+
+  try {
+    // QuickChart POST → връща кратък линк (избягва ограничения на URL дължина)
+    const res = await fetch('https://quickchart.io/chart/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chart: cfg, width: 600, height: 350, backgroundColor: 'white' }),
+    })
+    const json = await res.json()
+    if (json.url) return json.url
+  } catch { /* fallback към дълъг URL */ }
 
   return `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&width=600&height=350&backgroundColor=white`
 }
@@ -119,7 +130,7 @@ export default async function middleware(request) {
           if (poll.results_published) {
             const results = await sbFetchAll(`poll_results?poll_id=eq.${id}&select=label,vote_count,percentage&order=position.asc`)
             if (Array.isArray(results) && results.length > 0) {
-              image = chartImageUrl(results)
+              image = await chartImageUrl(results)
               const winner = results.reduce((a, b) => Number(a.vote_count) > Number(b.vote_count) ? a : b)
               desc = `Резултати: ${results.map(r => `${r.label} ${r.percentage}%`).join(' | ')}. Водещ: ${winner.label}`
             }
