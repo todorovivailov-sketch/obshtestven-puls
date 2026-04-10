@@ -9,7 +9,23 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
 
+  const ua = req.headers['user-agent'] || ''
+  const isCrawler = /facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare/i.test(ua)
+
   const { type, id, page } = req.query
+
+  // Нормален потребител → вземи index.html и го сервирай (React ще зареди правилния URL)
+  if (!isCrawler) {
+    try {
+      const r = await fetch(`${SITE_URL}/`)
+      const html = await r.text()
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      return res.send(html)
+    } catch {
+      res.setHeader('Location', SITE_URL)
+      return res.status(302).end()
+    }
+  }
 
   let title = SITE_NAME
   let description = 'Платформа за граждански анкети и анализи — Силистра и региона.'
