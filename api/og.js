@@ -4,38 +4,13 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 
 const SITE_NAME = 'Обществен пулс'
 const SITE_URL = 'https://obshtestvenpuls.online'
-const COLORS = ['%230369a1', '%23C0392B', '%23D4AC0D', '%231A8754', '%237C3AED', '%230891B2', '%23EA580C']
-
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-}
 
 export default async function handler(req, res) {
-  Object.entries(cors).forEach(([k, v]) => res.setHeader(k, v))
+  res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
 
-  const ua = req.headers['user-agent'] || ''
-  const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|vkshare/i.test(ua)
   const { type, id } = req.query
 
-  // Обикновен потребител → сервира index.html директно (без redirect за да избегнем loop)
-  if (!isCrawler) {
-    const fs = await import('fs')
-    const path = await import('path')
-    const indexPath = path.join(process.cwd(), 'dist', 'index.html')
-    try {
-      const html = fs.readFileSync(indexPath, 'utf-8')
-      res.setHeader('Content-Type', 'text/html; charset=utf-8')
-      return res.send(html)
-    } catch {
-      // fallback ако dist не е наличен
-      res.setHeader('Content-Type', 'text/html')
-      return res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><script>window.location.href='/'</script></head><body></body></html>`)
-    }
-  }
-
-  // Facebook/Twitter crawler → OG HTML
   let title = SITE_NAME
   let description = 'Платформа за граждански анкети и анализи — Силистра и региона.'
   let image = `${SITE_URL}/logo.png`
@@ -45,7 +20,10 @@ export default async function handler(req, res) {
     if (type === 'poll' && id) {
       pageUrl = `${SITE_URL}/anketi/${id}`
       const { data: poll } = await supabase
-        .from('polls').select('question,description,image_url,results_published').eq('id', id).single()
+        .from('polls')
+        .select('question,description,image_url,results_published')
+        .eq('id', id)
+        .single()
 
       if (poll) {
         title = poll.question || SITE_NAME
@@ -54,11 +32,14 @@ export default async function handler(req, res) {
 
         if (poll.results_published) {
           const { data: results } = await supabase
-            .from('poll_results').select('label,vote_count,percentage').eq('poll_id', id).order('position')
+            .from('poll_results')
+            .select('label,vote_count,percentage')
+            .eq('poll_id', id)
+            .order('position')
 
           if (results?.length) {
-            const chartImage = await buildChartUrl(results)
-            if (chartImage) image = chartImage
+            const chartImg = await buildChartUrl(results)
+            if (chartImg) image = chartImg
             const winner = results.reduce((a, b) => Number(a.vote_count) > Number(b.vote_count) ? a : b)
             description = `Резултати: ${results.map(r => `${r.label} ${r.percentage}%`).join(' | ')}. Водещ: ${winner.label}`
           }
@@ -69,7 +50,10 @@ export default async function handler(req, res) {
     if (type === 'article' && id) {
       pageUrl = `${SITE_URL}/komentari/${id}`
       const { data: article } = await supabase
-        .from('articles').select('title,body,image_url').eq('id', id).single()
+        .from('articles')
+        .select('title,body,image_url')
+        .eq('id', id)
+        .single()
 
       if (article) {
         title = article.title || SITE_NAME
@@ -81,7 +65,10 @@ export default async function handler(req, res) {
     if (type === 'policy' && id) {
       pageUrl = `${SITE_URL}/prevodach/${id}`
       const { data: item } = await supabase
-        .from('policy_translations').select('title,body,image_url').eq('id', id).single()
+        .from('policy_translations')
+        .select('title,body,image_url')
+        .eq('id', id)
+        .single()
 
       if (item) {
         title = item.title || SITE_NAME
