@@ -9,12 +9,46 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
 
-  const { type, id } = req.query
+  const { type, id, page } = req.query
 
   let title = SITE_NAME
   let description = 'Платформа за граждански анкети и анализи — Силистра и региона.'
   let image = `${SITE_URL}/logo.png`
   let pageUrl = SITE_URL
+
+  const staticPages = {
+    home:          { title: 'Обществен пулс — Силистра и региона', description: 'Платформа за граждански анкети и анализи по актуални обществени и политически теми.', url: SITE_URL },
+    anketi:        { title: 'Анкети — Обществен пулс', description: 'Участвайте в активните граждански анкети за Силистра и региона.', url: `${SITE_URL}/anketi` },
+    rezultati:     { title: 'Резултати от анкети — Обществен пулс', description: 'Разгледайте резултатите от приключилите граждански анкети.', url: `${SITE_URL}/rezultati` },
+    komentari:     { title: 'Коментари и анализи — Обществен пулс', description: 'Четете коментари и анализи по актуални теми за Силистра и региона.', url: `${SITE_URL}/komentari` },
+    prevodach:     { title: 'Преводач на политики — Обществен пулс', description: 'Разбираем превод на политически документи и решения за гражданите на Силистра.', url: `${SITE_URL}/prevodach` },
+    predlozheniya: { title: 'Предложения за граждански анкети — Обществен пулс', description: 'Имате идея за анкета по важна тема за Силистра? Споделете я с нас!', url: `${SITE_URL}/predlozheniya` },
+    kontakti:      { title: 'Контакти — Обществен пулс', description: 'Свържете се с екипа на Обществен пулс — Силистра и региона.', url: `${SITE_URL}/kontakti` },
+  }
+
+  if (type === 'static' && page && staticPages[page]) {
+    const p = staticPages[page]
+    const e = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    return res.send(`<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>${e(p.title)}</title>
+  <meta property="og:site_name" content="${SITE_NAME}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="${e(p.title)}" />
+  <meta property="og:description" content="${e(p.description)}" />
+  <meta property="og:image" content="${SITE_URL}/logo.png" />
+  <meta property="og:url" content="${p.url}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${e(p.title)}" />
+  <meta name="twitter:description" content="${e(p.description)}" />
+  <meta name="twitter:image" content="${SITE_URL}/logo.png" />
+</head>
+<body></body>
+</html>`)
+  }
 
   try {
     if (type === 'poll' && id) {

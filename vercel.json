@@ -1,20 +1,15 @@
 {
   "rewrites": [
-    {
-      "source": "/anketi/:id",
-      "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}],
-      "destination": "/api/og?type=poll&id=:id"
-    },
-    {
-      "source": "/komentari/:id",
-      "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}],
-      "destination": "/api/og?type=article&id=:id"
-    },
-    {
-      "source": "/prevodach/:id",
-      "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}],
-      "destination": "/api/og?type=policy&id=:id"
-    },
+    { "source": "/anketi/:id",    "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=poll&id=:id" },
+    { "source": "/komentari/:id", "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=article&id=:id" },
+    { "source": "/prevodach/:id", "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=policy&id=:id" },
+    { "source": "/anketi",        "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=anketi" },
+    { "source": "/rezultati",     "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=rezultati" },
+    { "source": "/komentari",     "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=komentari" },
+    { "source": "/prevodach",     "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=prevodach" },
+    { "source": "/predlozheniya", "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=predlozheniya" },
+    { "source": "/kontakti",      "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=kontakti" },
+    { "source": "/",              "has": [{"type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|vkShare).*"}], "destination": "/api/og?type=static&page=home" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
