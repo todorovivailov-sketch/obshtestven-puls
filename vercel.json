@@ -3,6 +3,6 @@
     { "source": "/anketi/:id", "destination": "/api/og?type=poll&id=:id" },
     { "source": "/komentari/:id", "destination": "/api/og?type=article&id=:id" },
     { "source": "/prevodach/:id", "destination": "/api/og?type=policy&id=:id" },
-    { "source": "/:path*", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
