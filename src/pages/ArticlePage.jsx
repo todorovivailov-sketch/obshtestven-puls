@@ -58,7 +58,7 @@ export default function ArticlePage() {
     )
   }
 
-  const siteUrl = 'https://obshtestven-puls.vercel.app'
+  const siteUrl = 'https://obshtestvenpuls.online'
   const plainText = article.body.replace(/<[^>]+>/g, '').slice(0, 160)
 
   return (

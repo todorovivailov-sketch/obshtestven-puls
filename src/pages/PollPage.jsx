@@ -16,7 +16,7 @@ export default function PollPage() {
     })
   }, [id])
 
-  const siteUrl = 'https://obshtestven-puls.vercel.app'
+  const siteUrl = 'https://obshtestvenpuls.online'
 
   return (
     <>
