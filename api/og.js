@@ -114,22 +114,39 @@ async function buildChartUrl(results) {
       type: 'bar',
       data: {
         labels,
-        datasets: [{ data: votes, backgroundColor: bgs, borderRadius: 8 }],
+        datasets: [{
+          data: votes,
+          backgroundColor: bgs,
+          borderRadius: 10,
+          barPercentage: 0.6,
+        }],
       },
       options: {
-        layout: { padding: { top: 40, bottom: 20, left: 20, right: 20 } },
+        layout: { padding: { top: 80, bottom: 30, left: 40, right: 40 } },
         plugins: {
           legend: { display: false },
           datalabels: {
-            anchor: 'end', align: 'top',
+            anchor: 'end',
+            align: 'end',
+            offset: 6,
             color: '#1e293b',
-            font: { weight: 'bold', size: 18 },
+            font: { weight: 'bold', size: 22 },
             formatter: (_, ctx) => `${percents[ctx.dataIndex]}%`,
           },
         },
         scales: {
-          y: { beginAtZero: true, ticks: { display: false }, grid: { display: false }, border: { display: false } },
-          x: { ticks: { font: { size: 16 }, color: '#374151' }, grid: { display: false }, border: { display: false } },
+          y: {
+            beginAtZero: true,
+            max: Math.max(...percents) + 20,
+            ticks: { display: false },
+            grid: { display: false },
+            border: { display: false },
+          },
+          x: {
+            ticks: { font: { size: 18, weight: 'bold' }, color: '#374151' },
+            grid: { display: false },
+            border: { display: false },
+          },
         },
       },
     }
@@ -137,7 +154,7 @@ async function buildChartUrl(results) {
     const r = await fetch('https://quickchart.io/chart/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chart: cfg, width: 1200, height: 630, backgroundColor: 'white' }),
+      body: JSON.stringify({ chart: cfg, width: 1200, height: 630, backgroundColor: 'white', devicePixelRatio: 1 }),
     })
     const json = await r.json()
     return json.url || null
