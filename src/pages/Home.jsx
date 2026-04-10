@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PollCard from '../components/PollCard'
 import ArticleCard from '../components/ArticleCard'
-import { pollsApi, articlesApi } from '../lib/api'
+import { pollsApi, articlesApi, policyTranslationsApi } from '../lib/api'
 
 export default function Home() {
   const [activePolls, setActivePolls] = useState([])
   const [closedPolls, setClosedPolls] = useState([])
   const [articles, setArticles] = useState([])
+  const [latestPolicy, setLatestPolicy] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -15,10 +16,12 @@ export default function Home() {
       pollsApi.getAll('active'),
       pollsApi.getHomeResults(),
       articlesApi.getAll(),
-    ]).then(([active, homeResults, arts]) => {
+      policyTranslationsApi.getAll(),
+    ]).then(([active, homeResults, arts, policies]) => {
       setActivePolls(Array.isArray(active) ? active : [])
       setClosedPolls(Array.isArray(homeResults) ? homeResults.slice(0, 2) : [])
       setArticles(Array.isArray(arts) ? arts.slice(0, 3) : [])
+      setLatestPolicy(Array.isArray(policies) && policies.length > 0 ? policies[0] : null)
       setLoading(false)
     })
   }, [])
@@ -106,6 +109,38 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-6">
               {closedPolls.map(p => <PollCard key={p.id} poll={p} showResults={true} />)}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Последно от Преводач на политики */}
+      {!loading && latestPolicy && (
+        <section className="py-12">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-navy-700">Преводач на политики</h2>
+              <Link to="/prevodach" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
+                Всички
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <Link to={`/prevodach/${latestPolicy.id}`} className="card flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-shadow">
+              {latestPolicy.image_url && (
+                <div className="md:w-72 h-48 md:h-auto shrink-0">
+                  <img src={latestPolicy.image_url} alt={latestPolicy.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="p-6 flex flex-col justify-center">
+                <span className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 w-fit mb-3">Политика</span>
+                <h3 className="text-xl font-bold text-navy-800 mb-2">{latestPolicy.title}</h3>
+                {latestPolicy.body && (
+                  <p className="text-gray-500 text-sm line-clamp-3">{latestPolicy.body.replace(/<[^>]+>/g, '').slice(0, 200)}</p>
+                )}
+                <span className="mt-4 text-crimson-600 text-sm font-medium">Прочети повече →</span>
+              </div>
+            </Link>
           </div>
         </section>
       )}
