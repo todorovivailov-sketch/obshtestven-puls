@@ -1,9 +1,5 @@
 {
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/anketi/([^/]+)", "dest": "/api/og?type=poll&id=$1" },
-    { "src": "/komentari/([^/]+)", "dest": "/api/og?type=article&id=$1" },
-    { "src": "/prevodach/([^/]+)", "dest": "/api/og?type=policy&id=$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
