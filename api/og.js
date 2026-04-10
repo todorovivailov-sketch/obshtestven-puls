@@ -119,21 +119,22 @@ async function buildChartUrl(results) {
       type: 'bar',
       data: {
         labels,
-        datasets: [{ data: votes, backgroundColor: bgs, borderRadius: 6 }],
+        datasets: [{ data: votes, backgroundColor: bgs, borderRadius: 8 }],
       },
       options: {
+        layout: { padding: { top: 40, bottom: 20, left: 20, right: 20 } },
         plugins: {
           legend: { display: false },
           datalabels: {
             anchor: 'end', align: 'top',
             color: '#1e293b',
-            font: { weight: 'bold', size: 14 },
+            font: { weight: 'bold', size: 18 },
             formatter: (_, ctx) => `${percents[ctx.dataIndex]}%`,
           },
         },
         scales: {
-          y: { beginAtZero: true, ticks: { display: false }, grid: { display: false } },
-          x: { ticks: { font: { size: 13 } } },
+          y: { beginAtZero: true, ticks: { display: false }, grid: { display: false }, border: { display: false } },
+          x: { ticks: { font: { size: 16 }, color: '#374151' }, grid: { display: false }, border: { display: false } },
         },
       },
     }
@@ -141,7 +142,7 @@ async function buildChartUrl(results) {
     const r = await fetch('https://quickchart.io/chart/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chart: cfg, width: 600, height: 350, backgroundColor: 'white' }),
+      body: JSON.stringify({ chart: cfg, width: 1200, height: 630, backgroundColor: 'white' }),
     })
     const json = await r.json()
     return json.url || null
