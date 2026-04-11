@@ -132,10 +132,10 @@ export default function PollChart({ results, options, showVotes = false }) {
                   tick={{ fontSize: 11, fill: '#6B7280' }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={v => `${v}`}
+                  tickFormatter={v => showVotes ? `${v}` : `${v}%`}
                 />
                 <Tooltip content={<CustomTooltip showVotes={showVotes} />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
-                <Bar dataKey="votes" radius={[8, 8, 0, 0]} isAnimationActive animationDuration={800}>
+                <Bar dataKey={showVotes ? 'votes' : 'percent'} radius={[8, 8, 0, 0]} isAnimationActive animationDuration={800}>
                   {data.map((d, i) => <Cell key={i} fill={d.color} />)}
                   <LabelList
                     dataKey="percent"

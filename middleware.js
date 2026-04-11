@@ -37,15 +37,15 @@ async function buildChart(results) {
     const bgs = COLORS.slice(0, labels.length)
     const cfg = {
       type: 'bar',
-      data: { labels, datasets: [{ data: votes, backgroundColor: bgs, borderRadius: 10, barPercentage: 0.6 }] },
+      data: { labels, datasets: [{ data: percents, backgroundColor: bgs, borderRadius: 10, barPercentage: 0.6 }] },
       options: {
         layout: { padding: { top: 80, bottom: 30, left: 40, right: 40 } },
         plugins: {
           legend: { display: false },
-          datalabels: { anchor: 'end', align: 'end', offset: 6, color: '#1e293b', font: { weight: 'bold', size: 22 }, formatter: (_, ctx) => `${percents[ctx.dataIndex]}%` },
+          datalabels: { anchor: 'end', align: 'end', offset: 6, color: '#1e293b', font: { weight: 'bold', size: 22 }, formatter: v => `${v}%` },
         },
         scales: {
-          y: { beginAtZero: true, max: Math.max(...percents) + 20, ticks: { display: false }, grid: { display: false }, border: { display: false } },
+          y: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { display: false }, border: { display: false } },
           x: { ticks: { font: { size: 18, weight: 'bold' }, color: '#374151' }, grid: { display: false }, border: { display: false } },
         },
       },
