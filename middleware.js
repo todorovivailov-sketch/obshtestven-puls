@@ -46,7 +46,7 @@ async function buildChart(results) {
         },
         scales: {
           y: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { display: false }, border: { display: false } },
-          x: { ticks: { font: { size: 26, weight: 'bold' }, color: '#374151' }, grid: { display: false }, border: { display: false } },
+          x: { ticks: { font: { size: 18, weight: 'bold' }, color: '#374151' }, grid: { display: false }, border: { display: false } },
         },
       },
     }
