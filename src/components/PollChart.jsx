@@ -30,10 +30,10 @@ function CustomTooltip({ active, payload, showVotes }) {
 
 function CustomLegend({ data }) {
   return (
-    <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3">
+    <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-4">
       {data.map((d, i) => (
-        <div key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
-          <span className="inline-block w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
+        <div key={i} className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <span className="inline-block w-4 h-4 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
           <span>{d.label}</span>
         </div>
       ))}
