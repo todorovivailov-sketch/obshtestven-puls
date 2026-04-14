@@ -90,9 +90,8 @@ export default function Contact() {
           </svg>
         </div>
         <div>
-          <div className="text-xs text-gray-400 mb-0.5">Отговорно лице</div>
+          <div className="text-xs text-gray-400 mb-0.5">Лице за контакт</div>
           <div className="text-sm font-semibold text-gray-800">Станислав Тодоров</div>
-          <div className="text-xs text-gray-400 mt-0.5">Създател на Обществен пулс</div>
         </div>
       </div>
 
