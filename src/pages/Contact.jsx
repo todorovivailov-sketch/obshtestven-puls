@@ -82,8 +82,22 @@ export default function Contact() {
         )}
       </div>
 
+      {/* Автор */}
+      <div className="mt-8 card p-5 flex items-center gap-4">
+        <div className="w-10 h-10 bg-navy-100 rounded-lg flex items-center justify-center shrink-0">
+          <svg className="w-5 h-5 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+        <div>
+          <div className="text-xs text-gray-400 mb-0.5">Отговорно лице</div>
+          <div className="text-sm font-semibold text-gray-800">Станислав Тодоров</div>
+          <div className="text-xs text-gray-400 mt-0.5">Създател на Обществен пулс</div>
+        </div>
+      </div>
+
       {/* Info */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card p-5 flex items-center gap-4">
           <div className="w-10 h-10 bg-navy-100 rounded-lg flex items-center justify-center">
             <svg className="w-5 h-5 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
