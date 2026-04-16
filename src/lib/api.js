@@ -39,12 +39,26 @@ export const pollsApi = {
 }
 
 // ГЛАСУВАНЕ
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'))
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+function setCookie(name, value) {
+  const expires = new Date()
+  expires.setFullYear(expires.getFullYear() + 2) // 2 години
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`
+}
+
 function getVoterId() {
-  let id = localStorage.getItem('voter_id')
+  // Търси първо в cookie, после в localStorage
+  let id = getCookie('voter_id') || localStorage.getItem('voter_id')
   if (!id) {
     id = crypto.randomUUID()
-    localStorage.setItem('voter_id', id)
   }
+  // Запази и на двете места
+  localStorage.setItem('voter_id', id)
+  setCookie('voter_id', id)
   return id
 }
 
