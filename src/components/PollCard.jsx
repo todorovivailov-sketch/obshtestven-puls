@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PollChart from './PollChart'
-import { voteApi } from '../lib/api'
+import { voteApi, getVotedPolls } from '../lib/api'
 
 export default function PollCard({ poll, showResults = false }) {
   const [selected, setSelected] = useState(null)
@@ -9,6 +9,12 @@ export default function PollCard({ poll, showResults = false }) {
   const [voted, setVoted] = useState(showResults)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!voted && getVotedPolls().has(String(poll.id))) {
+      setVoted(true)
+    }
+  }, [poll.id])
 
   const isClosed = poll.status === 'closed'
   const showResultsPublic = showResults || (isClosed && poll.results_published)

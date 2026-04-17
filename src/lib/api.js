@@ -51,24 +51,41 @@ function setCookie(name, value) {
 }
 
 function getVoterId() {
-  // Търси първо в cookie, после в localStorage
   let id = getCookie('voter_id') || localStorage.getItem('voter_id')
-  if (!id) {
-    id = crypto.randomUUID()
-  }
-  // Запази и на двете места
+  if (!id) id = crypto.randomUUID()
   localStorage.setItem('voter_id', id)
   setCookie('voter_id', id)
   return id
 }
 
+// Списък с анкети по които вече сме гласували (пази се в cookie + localStorage)
+export function getVotedPolls() {
+  try {
+    const raw = getCookie('voted_polls') || localStorage.getItem('voted_polls') || ''
+    return new Set(raw ? raw.split(',') : [])
+  } catch { return new Set() }
+}
+
+export function markPollVoted(poll_id) {
+  try {
+    const voted = getVotedPolls()
+    voted.add(String(poll_id))
+    const val = [...voted].join(',')
+    localStorage.setItem('voted_polls', val)
+    setCookie('voted_polls', val)
+  } catch {}
+}
+
 export const voteApi = {
-  vote: (poll_id, option_id) =>
-    fetch(`${BASE}/vote`, {
+  vote: async (poll_id, option_id) => {
+    const res = await fetch(`${BASE}/vote`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ poll_id, option_id, voter_id: getVoterId() }),
-    }).then(r => r.json()),
+    }).then(r => r.json())
+    if (res.success) markPollVoted(poll_id)
+    return res
+  },
 }
 
 // СТАТИИ
