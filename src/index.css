@@ -43,24 +43,18 @@
   font-size: 1.1rem;
   line-height: 1.9;
   color: #2d3748;
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .article-body h1 { @apply text-2xl font-bold mb-5 mt-8 text-navy-700; }
 .article-body h2 { @apply text-xl font-bold mb-4 mt-7 text-navy-700 border-b border-gray-200 pb-2; }
 .article-body h3 { @apply text-lg font-semibold mb-3 mt-6 text-navy-600; }
 .article-body p  {
   @apply mb-5 text-gray-800;
-  text-align: justify;
-  text-justify: inter-word;
   line-height: 1.9;
 }
 .article-body ul { @apply list-disc pl-6 mb-5 space-y-2 text-gray-700; }
 .article-body ol { @apply list-decimal pl-6 mb-5 space-y-2 text-gray-700; }
-.article-body li { text-align: justify; }
+.article-body li { }
 .article-body blockquote {
   @apply border-l-4 border-crimson-600 pl-5 italic text-gray-600 my-6 bg-gray-50 py-3 pr-4 rounded-r-lg;
   font-size: 1.05rem;
