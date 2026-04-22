@@ -12,16 +12,16 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
+    Promise.allSettled([
       pollsApi.getAll('active'),
       pollsApi.getHomeResults(),
       articlesApi.getAll(),
       policyTranslationsApi.getAll(),
     ]).then(([active, homeResults, arts, policies]) => {
-      setActivePolls(Array.isArray(active) ? active : [])
-      setClosedPolls(Array.isArray(homeResults) ? homeResults.slice(0, 2) : [])
-      setArticles(Array.isArray(arts) ? arts.slice(0, 3) : [])
-      setLatestPolicy(Array.isArray(policies) && policies.length > 0 ? policies[0] : null)
+      setActivePolls(Array.isArray(active.value) ? active.value : [])
+      setClosedPolls(Array.isArray(homeResults.value) ? homeResults.value.slice(0, 2) : [])
+      setArticles(Array.isArray(arts.value) ? arts.value.slice(0, 3) : [])
+      setLatestPolicy(Array.isArray(policies.value) && policies.value.length > 0 ? policies.value[0] : null)
       setLoading(false)
     })
   }, [])

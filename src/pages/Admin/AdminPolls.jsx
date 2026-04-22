@@ -28,13 +28,13 @@ export default function AdminPolls() {
   const editImageRef = useRef()
 
   async function loadPolls() {
-    const [active, closed] = await Promise.all([
+    const [active, closed] = await Promise.allSettled([
       pollsApi.getAll('active'),
       pollsApi.getAll('closed'),
     ])
     setPolls([
-      ...(Array.isArray(active) ? active : []),
-      ...(Array.isArray(closed) ? closed : []),
+      ...(Array.isArray(active.value) ? active.value : []),
+      ...(Array.isArray(closed.value) ? closed.value : []),
     ])
     setLoading(false)
   }
