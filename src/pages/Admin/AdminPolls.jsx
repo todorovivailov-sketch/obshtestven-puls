@@ -172,9 +172,9 @@ export default function AdminPolls() {
   }
 
   async function hideFromArchive(poll) {
-    if (!confirm('Скрий от архива с резултати? Анкетата няма да се изтрие — само ще изчезне от страницата с резултати.')) return
-    await pollsApi.update({ id: poll.id, results_published: false, show_on_home: false })
-    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results_published: false, show_on_home: false } : p))
+    if (!confirm('Оттегли публикуваните резултати? Анкетата няма да се изтрие — резултатите и обобщението само ще се скрият от публичния изглед.')) return
+    await pollsApi.update({ id: poll.id, results_published: false, result_summary: null, show_on_home: false })
+    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results_published: false, result_summary: null, show_on_home: false } : p))
   }
 
   async function handleDelete(id) {
@@ -431,7 +431,7 @@ export default function AdminPolls() {
                         className="text-sm text-orange-700 border border-orange-200 hover:bg-orange-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
                         title="Скрива от архива с резултати, но не изтрива анкетата"
                       >
-                        Скрий от архив
+                        Оттегли резултати
                       </button>
                     )}
                     {!poll.results_published && poll.status === 'closed' && (
