@@ -29,7 +29,7 @@ export default function Suggestions() {
     <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="page-header">
         <h1 className="text-2xl font-bold text-navy-800 mb-1">Предложения за граждански анкети</h1>
-        <p className="text-gray-500 text-sm">Имате идея за анкета по важна тема за Силистра и региона? Споделете я с нас!</p>
+        <p className="text-gray-500 text-sm">Имате идея за анкета, която да засегне важна тема за Силистра и региона? Споделете я с нас!</p>
       </div>
 
       <div className="card p-8">

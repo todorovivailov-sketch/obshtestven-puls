@@ -54,8 +54,11 @@ export default function Home() {
             Вашият глас.<br />
             <span className="text-crimson-400">Обществен пулс.</span>
           </h1>
-          <p className="text-white/80 text-base md:text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-            Анонимни анкети по актуални теми за Силистра и региона. Гласувайте, следете резултатите, изграждайте гражданска позиция.
+          <p className="text-white/80 text-base leading-relaxed mb-5 max-w-3xl mx-auto">
+            Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
+          </p>
+          <p className="text-white/70 text-base leading-relaxed mb-10 max-w-2xl mx-auto">
+            Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link to="/anketi" className="bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">

@@ -20,7 +20,7 @@ export default function Rezultati() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-navy-800 mb-1">Резултати от анкети</h1>
+        <h1 className="text-2xl font-bold text-navy-800 mb-1">Резултати</h1>
         <p className="text-gray-500 text-sm">Резултати от приключили анкети с графики и данни.</p>
       </div>
 
