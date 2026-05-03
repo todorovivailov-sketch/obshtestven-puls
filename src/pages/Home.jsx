@@ -100,7 +100,7 @@ export default function Home() {
 
       {/* Последни резултати */}
       {!loading && closedPolls.length > 0 && (
-        <section className="bg-gray-50 py-12">
+        <section className="py-12" style={{ background: '#EDE8DF' }}>
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <h2 className="section-h text-xl">Последни резултати</h2>
@@ -145,7 +145,7 @@ export default function Home() {
       )}
 
       {/* Последни анализи */}
-      <section className={closedPolls.length > 0 ? 'py-12' : 'bg-gray-50 py-12'}>
+      <section className="py-12" style={closedPolls.length === 0 ? { background: '#EDE8DF' } : {}}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
             <h2 className="section-h text-xl">Последни анализи</h2>

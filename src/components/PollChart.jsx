@@ -3,8 +3,17 @@ import {
   ResponsiveContainer, Cell, Legend, LabelList,
 } from 'recharts'
 
-const NAVY   = '#1B3A6B'
-const CRIMSON = '#C0392B'
+// Vintage/muted палитра — земни тонове, не неонови
+const PALETTE = [
+  '#1B4072', // тъмно синьо
+  '#922B21', // бургундско червено
+  '#7A6200', // матово злато
+  '#1A5C38', // горска зеленина
+  '#5C341A', // изгоряла керемида
+  '#1A5068', // тъмен теал
+  '#52284C', // тъмна слива
+  '#3D5A00', // маслина
+]
 
 function CustomTooltip({ active, payload, showVotes }) {
   if (active && payload && payload.length) {
@@ -38,7 +47,6 @@ export default function PollChart({ results, options, showVotes = false }) {
     return <p className="text-gray-500 text-sm text-center py-6">Все още няма гласове.</p>
   }
 
-  // Изграждаме данните без цветове
   const rawData = results?.length
     ? results.map(r => ({
         label: r.label,
@@ -53,15 +61,14 @@ export default function PollChart({ results, options, showVotes = false }) {
 
   const total = rawData.reduce((s, d) => s + d.votes, 0)
 
-  // Намираме индекса на водещия
   const winnerIdx = total > 0
     ? rawData.reduce((best, d, i, arr) => d.votes > arr[best].votes ? i : best, 0)
     : -1
 
-  // Водещ → crimson, останалите → navy
+  // Всеки отговор получава свой vintage цвят
   const data = rawData.map((d, i) => ({
     ...d,
-    color: i === winnerIdx ? CRIMSON : NAVY,
+    color: PALETTE[i % PALETTE.length],
   }))
 
   const winner = winnerIdx >= 0 ? data[winnerIdx] : null
