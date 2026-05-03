@@ -74,8 +74,10 @@ export default function PollChart({ results, options, showVotes = false }) {
           }
         </div>
         {winner && total > 0 && (
-          <div className="text-xs text-gray-500 bg-gray-100 rounded-lg px-3 py-1">
-            Водещ: <span className="font-semibold text-navy-700">{winner.label}</span> ({winner.percent}%)
+          <div className="inline-flex items-center gap-1.5 text-xs bg-crimson-50 text-crimson-800 border border-crimson-200 rounded-lg px-3 py-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-crimson-500 flex-shrink-0" />
+            Водещ: <span className="font-bold">{winner.label}</span>
+            <span className="text-crimson-500 font-semibold">({winner.percent}%)</span>
           </div>
         )}
       </div>
@@ -97,19 +99,14 @@ export default function PollChart({ results, options, showVotes = false }) {
                 <span className="font-bold text-navy-700 w-12 text-right">{d.percent}%</span>
               </div>
             </div>
-            <div className="h-7 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-3"
+                className="h-full rounded-full transition-all duration-1000 ease-out"
                 style={{
-                  width: `${Math.max(d.percent, d.votes > 0 ? 4 : 0)}%`,
+                  width: `${Math.max(d.percent, d.votes > 0 ? 2 : 0)}%`,
                   backgroundColor: d.color,
-                  opacity: 0.9,
                 }}
-              >
-                {d.votes > 0 && d.percent >= 8 && (
-                  <span className="text-white text-xs font-bold">{d.percent}%</span>
-                )}
-              </div>
+              />
             </div>
           </div>
         ))}

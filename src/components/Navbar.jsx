@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="bg-navy-700 sticky top-0 z-50 border-b border-navy-600">
+    <header className="bg-navy-700 sticky top-0 z-50 border-b border-navy-600/60 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-14">
 

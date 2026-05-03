@@ -67,7 +67,7 @@ export default function Home() {
               <Link to="/anketi" className="bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
                 Вижте анкетите
               </Link>
-              <Link to="/komentari" className="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
+              <Link to="/komentari" className="border border-white/60 hover:border-white hover:bg-white/10 text-white font-semibold px-7 py-2.5 rounded-lg transition-all duration-200 text-sm">
                 Четете анализи
               </Link>
             </div>
