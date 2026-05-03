@@ -29,45 +29,50 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative text-white overflow-hidden" style={{ minHeight: '480px' }}>
-        {/* Видео фон */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+      <section className="text-white" style={{ background: '#0B1833' }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:min-h-[440px]">
 
-        {/* Gradient overlay — тъмен отгоре и отдолу, по-прозрачен в средата */}
-        <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(to bottom, rgba(11,24,51,0.75) 0%, rgba(11,24,51,0.55) 50%, rgba(11,24,51,0.80) 100%)' }} />
+          {/* Видео вляво */}
+          <div className="md:w-5/12 p-5 md:p-8 flex items-center">
+            <div className="w-full h-[220px] md:h-[300px] rounded-xl overflow-hidden shadow-2xl border border-white/10">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              >
+                <source src="/hero-video.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
 
-        {/* Съдържание */}
-        <div className="relative z-20 max-w-4xl mx-auto px-4 py-20 text-center">
-          <div className="inline-flex items-center gap-2 border border-white/20 text-white/70 text-xs font-semibold px-3 py-1 rounded-full mb-8 uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 bg-crimson-400 rounded-full animate-pulse" />
-            Граждански барометър · Силистра
+          {/* Текст вдясно */}
+          <div className="md:w-7/12 px-5 md:pl-6 md:pr-12 pb-10 md:py-0 flex flex-col justify-center md:border-l md:border-white/5">
+            <div className="inline-flex items-center gap-2 border border-white/20 text-white/70 text-xs font-semibold px-3 py-1 rounded-full mb-7 uppercase tracking-widest w-fit">
+              <span className="w-1.5 h-1.5 bg-crimson-400 rounded-full animate-pulse" />
+              Граждански барометър · Силистра
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-5 leading-tight">
+              Вашият глас.<br />
+              <span className="text-crimson-400">Обществен пулс.</span>
+            </h1>
+            <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4">
+              Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
+            </p>
+            <p className="text-white/60 text-sm leading-relaxed mb-8">
+              Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/anketi" className="bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
+                Вижте анкетите
+              </Link>
+              <Link to="/komentari" className="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
+                Четете анализи
+              </Link>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Вашият глас.<br />
-            <span className="text-crimson-400">Обществен пулс.</span>
-          </h1>
-          <p className="text-white/80 text-base leading-relaxed mb-5 max-w-3xl mx-auto">
-            Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
-          </p>
-          <p className="text-white/70 text-base leading-relaxed mb-10 max-w-2xl mx-auto">
-            Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link to="/anketi" className="bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
-              Вижте анкетите
-            </Link>
-            <Link to="/komentari" className="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
-              Четете анализи
-            </Link>
-          </div>
+
         </div>
       </section>
 
