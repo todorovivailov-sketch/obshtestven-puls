@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 
 const CATEGORY_LABELS = {
-  analysis: { label: 'Анализ',   textColor: 'text-navy-600' },
-  comment:  { label: 'Коментар', textColor: 'text-crimson-600' },
-  news:     { label: 'Новина',   textColor: 'text-green-700' },
+  analysis: 'Анализ',
+  comment:  'Коментар',
+  news:     'Новина',
 }
 
 export default function ArticleCard({ article }) {
-  const cat = CATEGORY_LABELS[article.category] || CATEGORY_LABELS.analysis
+  const catLabel = CATEGORY_LABELS[article.category] || 'Статия'
 
   return (
     <Link to={`/komentari/${article.id}`} className="article-card group">
@@ -24,8 +24,8 @@ export default function ArticleCard({ article }) {
 
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-3">
-          <span className={`text-[10px] font-bold uppercase tracking-widest ${cat.textColor}`}>
-            {cat.label}
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            {catLabel}
           </span>
           <span className="text-gray-300 text-xs">·</span>
           <span className="text-xs text-gray-400">

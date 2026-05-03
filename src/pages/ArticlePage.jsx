@@ -18,11 +18,6 @@ const CATEGORY_LABELS = {
   news: 'Новина',
 }
 
-const CATEGORY_COLORS = {
-  analysis: 'bg-navy-100 text-navy-700',
-  comment: 'bg-crimson-100 text-crimson-700',
-  news: 'bg-green-100 text-green-700',
-}
 
 export default function ArticlePage() {
   const { id } = useParams()
@@ -86,7 +81,7 @@ export default function ArticlePage() {
 
         {/* Категория badge */}
         <div className="mb-4">
-          <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full ${CATEGORY_COLORS[article.category] || 'bg-gray-100 text-gray-600'}`}>
+          <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
             {CATEGORY_LABELS[article.category] || 'Статия'}
           </span>
         </div>

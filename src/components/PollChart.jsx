@@ -3,16 +3,8 @@ import {
   ResponsiveContainer, Cell, Legend, LabelList,
 } from 'recharts'
 
-const COLORS = [
-  '#0369a1', // небесносин
-  '#C0392B', // червено
-  '#D4AC0D', // злато
-  '#1A8754', // зелено
-  '#7C3AED', // лилаво
-  '#0891B2', // циан
-  '#EA580C', // оранжево
-  '#BE185D', // розово
-]
+const NAVY   = '#1B3A6B'
+const CRIMSON = '#C0392B'
 
 function CustomTooltip({ active, payload, showVotes }) {
   if (active && payload && payload.length) {
@@ -20,7 +12,7 @@ function CustomTooltip({ active, payload, showVotes }) {
     return (
       <div className="bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3 text-sm">
         <p className="font-semibold text-gray-800 mb-1">{d.label}</p>
-        <p className="text-navy-700"><span className="font-bold text-lg">{d.percent}%</span></p>
+        <p style={{ color: d.color }}><span className="font-bold text-lg">{d.percent}%</span></p>
         {showVotes && <p className="text-gray-500">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</p>}
       </div>
     )
@@ -33,7 +25,7 @@ function CustomLegend({ data }) {
     <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-4">
       {data.map((d, i) => (
         <div key={i} className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <span className="inline-block w-4 h-4 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
+          <span className="inline-block w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
           <span>{d.label}</span>
         </div>
       ))}
@@ -46,22 +38,33 @@ export default function PollChart({ results, options, showVotes = false }) {
     return <p className="text-gray-500 text-sm text-center py-6">Все още няма гласове.</p>
   }
 
-  const data = results?.length
-    ? results.map((r, i) => ({
+  // Изграждаме данните без цветове
+  const rawData = results?.length
+    ? results.map(r => ({
         label: r.label,
         votes: Number(r.vote_count),
         percent: Number(r.percentage) || 0,
-        color: COLORS[i % COLORS.length],
       }))
-    : options?.map((o, i) => ({
+    : options?.map(o => ({
         label: o.label,
         votes: 0,
         percent: 0,
-        color: COLORS[i % COLORS.length],
       }))
 
-  const total = data.reduce((s, d) => s + d.votes, 0)
-  const winner = total > 0 ? data.reduce((a, b) => a.votes > b.votes ? a : b) : null
+  const total = rawData.reduce((s, d) => s + d.votes, 0)
+
+  // Намираме индекса на водещия
+  const winnerIdx = total > 0
+    ? rawData.reduce((best, d, i, arr) => d.votes > arr[best].votes ? i : best, 0)
+    : -1
+
+  // Водещ → crimson, останалите → navy
+  const data = rawData.map((d, i) => ({
+    ...d,
+    color: i === winnerIdx ? CRIMSON : NAVY,
+  }))
+
+  const winner = winnerIdx >= 0 ? data[winnerIdx] : null
 
   return (
     <div className="space-y-5">
@@ -82,24 +85,21 @@ export default function PollChart({ results, options, showVotes = false }) {
         )}
       </div>
 
-      {/* Хоризонтални барове с анимация */}
+      {/* Хоризонтални барове */}
       <div className="space-y-3">
         {data.map((d, i) => (
           <div key={i}>
             <div className="flex justify-between items-center text-sm mb-1.5">
               <div className="flex items-center gap-2">
-                <span
-                  className="inline-block w-3 h-3 rounded-sm flex-shrink-0"
-                  style={{ backgroundColor: d.color }}
-                />
+                <span className="inline-block w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
                 <span className="font-medium text-gray-800">{d.label}</span>
               </div>
               <div className="flex items-center gap-2">
                 {showVotes && <span className="text-gray-400 text-xs">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</span>}
-                <span className="font-bold text-navy-700 w-12 text-right">{d.percent}%</span>
+                <span className="font-bold w-12 text-right" style={{ color: d.color }}>{d.percent}%</span>
               </div>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-1000 ease-out"
                 style={{
@@ -132,7 +132,7 @@ export default function PollChart({ results, options, showVotes = false }) {
                   tickFormatter={v => showVotes ? `${v}` : `${v}%`}
                 />
                 <Tooltip content={<CustomTooltip showVotes={showVotes} />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
-                <Bar dataKey={showVotes ? 'votes' : 'percent'} radius={[8, 8, 0, 0]} isAnimationActive animationDuration={800}>
+                <Bar dataKey={showVotes ? 'votes' : 'percent'} radius={[6, 6, 0, 0]} isAnimationActive animationDuration={800}>
                   {data.map((d, i) => <Cell key={i} fill={d.color} />)}
                   <LabelList
                     dataKey="percent"

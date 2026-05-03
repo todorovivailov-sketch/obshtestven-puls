@@ -39,7 +39,7 @@ export default function PolicyTranslations() {
               )}
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
                     Политика
                   </span>
                   <span className="text-gray-300 text-xs">·</span>

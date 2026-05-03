@@ -132,7 +132,7 @@ export default function Home() {
                 </div>
               )}
               <div className="p-6 flex flex-col justify-center">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-3">Политика</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Политика</span>
                 <h3 className="font-serif text-xl font-bold text-navy-800 mb-2">{latestPolicy.title}</h3>
                 {latestPolicy.body && (
                   <p className="text-gray-500 text-sm line-clamp-3">{latestPolicy.body.replace(/<[^>]+>/g, '').slice(0, 200)}</p>

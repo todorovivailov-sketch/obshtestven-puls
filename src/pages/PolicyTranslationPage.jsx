@@ -58,7 +58,7 @@ export default function PolicyTranslationPage() {
 
         {/* Badge */}
         <div className="mb-4">
-          <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-100 text-amber-700">
+          <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Политика
           </span>
         </div>
