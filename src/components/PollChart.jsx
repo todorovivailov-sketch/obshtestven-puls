@@ -1,7 +1,3 @@
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, Legend, LabelList,
-} from 'recharts'
 
 // Vintage/muted палитра — земни тонове, не неонови
 const PALETTE = [
@@ -14,33 +10,6 @@ const PALETTE = [
   '#52284C', // тъмна слива
   '#3D5A00', // маслина
 ]
-
-function CustomTooltip({ active, payload, showVotes }) {
-  if (active && payload && payload.length) {
-    const d = payload[0].payload
-    return (
-      <div className="bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3 text-sm">
-        <p className="font-semibold text-gray-800 mb-1">{d.label}</p>
-        <p style={{ color: d.color }}><span className="font-bold text-lg">{d.percent}%</span></p>
-        {showVotes && <p className="text-gray-500">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</p>}
-      </div>
-    )
-  }
-  return null
-}
-
-function CustomLegend({ data }) {
-  return (
-    <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-4">
-      {data.map((d, i) => (
-        <div key={i} className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <span className="inline-block w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
-          <span>{d.label}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
 
 export default function PollChart({ results, options, showVotes = false }) {
   if (!results?.length && !options?.length) {
@@ -92,21 +61,21 @@ export default function PollChart({ results, options, showVotes = false }) {
         )}
       </div>
 
-      {/* Хоризонтални барове */}
-      <div className="space-y-3">
+      {/* Хоризонтални барове — 2 колони при 4+ отговора */}
+      <div className={data.length >= 4 ? 'grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4' : 'space-y-4'}>
         {data.map((d, i) => (
           <div key={i}>
             <div className="flex justify-between items-center text-sm mb-1.5">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 <span className="inline-block w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
-                <span className="font-medium text-gray-800">{d.label}</span>
+                <span className="font-medium text-gray-800 truncate">{d.label}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-2 shrink-0">
                 {showVotes && <span className="text-gray-400 text-xs">{d.votes} {d.votes === 1 ? 'глас' : 'гласа'}</span>}
-                <span className="font-bold w-12 text-right" style={{ color: d.color }}>{d.percent}%</span>
+                <span className="font-bold w-10 text-right" style={{ color: d.color }}>{d.percent}%</span>
               </div>
             </div>
-            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-gray-200/60 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-1000 ease-out"
                 style={{
@@ -118,42 +87,6 @@ export default function PollChart({ results, options, showVotes = false }) {
           </div>
         ))}
       </div>
-
-      {/* Recharts колонна диаграма */}
-      {total > 0 && (
-        <div className="mt-6">
-          <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} margin={{ top: 15, right: 15, left: -15, bottom: 5 }} barCategoryGap="30%">
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                <XAxis
-                  dataKey="label"
-                  tick={{ fontSize: 11, fill: '#6B7280' }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 11, fill: '#6B7280' }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={v => showVotes ? `${v}` : `${v}%`}
-                />
-                <Tooltip content={<CustomTooltip showVotes={showVotes} />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
-                <Bar dataKey={showVotes ? 'votes' : 'percent'} radius={[6, 6, 0, 0]} isAnimationActive animationDuration={800}>
-                  {data.map((d, i) => <Cell key={i} fill={d.color} />)}
-                  <LabelList
-                    dataKey="percent"
-                    position="top"
-                    formatter={v => v > 0 ? `${v}%` : ''}
-                    style={{ fontSize: 11, fontWeight: 700, fill: '#374151' }}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <CustomLegend data={data} />
-        </div>
-      )}
     </div>
   )
 }
