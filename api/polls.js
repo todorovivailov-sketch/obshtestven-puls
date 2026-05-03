@@ -89,11 +89,34 @@ export default async function handler(req, res) {
       const { data, error } = await supabase.from('polls').update(fields).eq('id', id).select().single()
       if (error) throw error
 
-      // Ако са изпратени нови опции — изтрий старите и вкарай новите
+      // Ако са изпратени нови опции — UPDATE съществуващите по позиция (запазва option IDs и гласовете!)
       if (req.body.options && Array.isArray(req.body.options)) {
-        await supabase.from('poll_options').delete().eq('poll_id', id)
-        const optRows = req.body.options.filter(l => l.trim()).map((label, i) => ({ poll_id: id, label, position: i }))
-        if (optRows.length) await supabase.from('poll_options').insert(optRows)
+        const newLabels = req.body.options.map(l => String(l).trim()).filter(Boolean)
+
+        const { data: existing } = await supabase
+          .from('poll_options').select('id, position').eq('poll_id', id).order('position')
+        const existingOpts = existing || []
+
+        // UPDATE съществуващите опции на същата позиция
+        for (let i = 0; i < Math.min(newLabels.length, existingOpts.length); i++) {
+          await supabase.from('poll_options')
+            .update({ label: newLabels[i], position: i })
+            .eq('id', existingOpts[i].id)
+        }
+
+        // INSERT нови (ако се добавят повече варианти)
+        if (newLabels.length > existingOpts.length) {
+          const toInsert = newLabels.slice(existingOpts.length).map((label, j) => ({
+            poll_id: id, label, position: existingOpts.length + j
+          }))
+          await supabase.from('poll_options').insert(toInsert)
+        }
+
+        // DELETE премахнатите (ако се намаляват варианти)
+        if (existingOpts.length > newLabels.length) {
+          const toDelete = existingOpts.slice(newLabels.length).map(o => o.id)
+          await supabase.from('poll_options').delete().in('id', toDelete)
+        }
       }
 
       return res.json(data)
