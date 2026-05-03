@@ -71,12 +71,9 @@ export default function Home() {
       {/* Активни анкети */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-navy-700">Активни анкети</h2>
+          <h2 className="text-xl font-bold text-navy-800">Активни анкети</h2>
           <Link to="/anketi" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
-            Всички
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </Link>
         </div>
 
@@ -98,12 +95,9 @@ export default function Home() {
         <section className="bg-gray-50 py-12">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-navy-700">Последни резултати</h2>
+              <h2 className="text-xl font-bold text-navy-800">Последни резултати</h2>
               <Link to="/rezultati" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
-                Всички резултати
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </Link>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -118,12 +112,9 @@ export default function Home() {
         <section className="py-12">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-navy-700">Преводач на политики</h2>
+              <h2 className="text-xl font-bold text-navy-800">Преводач на политики</h2>
               <Link to="/prevodach" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
-                Всички
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </Link>
             </div>
             <Link to={`/prevodach/${latestPolicy.id}`} className="card flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-shadow">
@@ -149,12 +140,9 @@ export default function Home() {
       <section className={closedPolls.length > 0 ? 'py-12' : 'bg-gray-50 py-12'}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-navy-700">Последни анализи</h2>
+            <h2 className="text-xl font-bold text-navy-800">Последни анализи</h2>
             <Link to="/komentari" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
-              Всички
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </Link>
           </div>
 

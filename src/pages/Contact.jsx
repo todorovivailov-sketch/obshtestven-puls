@@ -19,9 +19,9 @@ export default function Contact() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-navy-700 mb-2">Контакти</h1>
-        <p className="text-gray-500">Изпратете ни съобщение — ще се свържем с вас.</p>
+      <div className="page-header">
+        <h1 className="text-2xl font-bold text-navy-800 mb-1">Контакти</h1>
+        <p className="text-gray-500 text-sm">Изпратете ни съобщение — ще се свържем с вас.</p>
       </div>
 
       <div className="card p-8">

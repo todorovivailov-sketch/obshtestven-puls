@@ -13,28 +13,40 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm;
   }
   .btn-secondary {
-    @apply bg-navy-700 hover:bg-navy-800 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200;
+    @apply bg-navy-700 hover:bg-navy-800 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 text-sm;
   }
   .btn-outline {
-    @apply border-2 border-navy-700 text-navy-700 hover:bg-navy-700 hover:text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200;
+    @apply border border-navy-600 text-navy-700 hover:bg-navy-700 hover:text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 text-sm;
   }
   .card {
     @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden;
   }
   .input {
-    @apply w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent;
+    @apply w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400 focus:border-transparent bg-white;
   }
   .label {
-    @apply block text-sm font-medium text-gray-700 mb-1.5;
+    @apply block text-sm font-medium text-gray-600 mb-1.5;
   }
   .badge-active {
-    @apply inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full;
+    @apply inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-200;
   }
   .badge-closed {
-    @apply inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full;
+    @apply inline-flex items-center gap-1.5 bg-gray-50 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full border border-gray-200;
+  }
+  .page-header {
+    @apply border-b border-gray-100 pb-6 mb-8;
+  }
+  .filter-pill {
+    @apply px-4 py-1.5 rounded-full text-sm font-medium border transition-colors;
+  }
+  .filter-pill-active {
+    @apply bg-navy-800 text-white border-navy-800;
+  }
+  .filter-pill-inactive {
+    @apply bg-white text-gray-600 border-gray-200 hover:border-navy-300 hover:text-navy-700;
   }
 }
 

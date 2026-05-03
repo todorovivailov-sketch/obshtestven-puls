@@ -54,36 +54,34 @@ export default function PollCard({ poll, showResults = false }) {
       )}
 
       {/* Хедър */}
-      <div className="bg-gradient-to-r from-navy-700 to-navy-600 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <h2 className="text-white font-semibold text-lg leading-snug">{poll.question}</h2>
+      <div className="bg-navy-800 p-5">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <h2 className="text-white font-semibold text-base leading-snug">{poll.question}</h2>
           {isClosed
             ? <span className="badge-closed shrink-0">Приключила</span>
-            : <span className="badge-active shrink-0"><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />Активна</span>
+            : <span className="badge-active shrink-0"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />Активна</span>
           }
         </div>
         {poll.description && (
-          <p className="text-navy-200 text-sm mt-2">{poll.description}</p>
+          <p className="text-navy-300 text-sm mb-2">{poll.description}</p>
         )}
-        {(poll.start_date || poll.end_date) && (
-          <div className="flex items-center gap-3 mt-2 text-xs text-navy-300">
-            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <div className="flex items-center gap-4 text-xs text-navy-400 flex-wrap">
+          {(poll.start_date || poll.end_date) && (
+            <span className="flex items-center gap-1">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {poll.start_date && new Date(poll.start_date).toLocaleDateString('bg-BG')}
+              {poll.start_date && poll.end_date && ' — '}
+              {poll.end_date && new Date(poll.end_date).toLocaleDateString('bg-BG')}
+            </span>
+          )}
+          <span className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {poll.start_date && (
-              <span>От: {new Date(poll.start_date).toLocaleDateString('bg-BG')}</span>
-            )}
-            {poll.start_date && poll.end_date && <span>—</span>}
-            {poll.end_date && (
-              <span>До: {new Date(poll.end_date).toLocaleDateString('bg-BG')}</span>
-            )}
-          </div>
-        )}
-        <div className="flex items-center gap-1.5 mt-2 text-xs text-navy-300">
-          <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span>{totalVotes} {totalVotes === 1 ? 'глас' : 'гласа'}</span>
+            {totalVotes} {totalVotes === 1 ? 'глас' : 'гласа'}
+          </span>
         </div>
       </div>
 
@@ -94,9 +92,9 @@ export default function PollCard({ poll, showResults = false }) {
             {poll.options?.map(opt => (
               <label
                 key={opt.id}
-                className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all duration-150 ${
+                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-150 ${
                   selected === opt.id
-                    ? 'border-crimson-500 bg-crimson-50'
+                    ? 'border-crimson-400 bg-crimson-50'
                     : 'border-gray-200 hover:border-navy-300 hover:bg-gray-50'
                 }`}
               >

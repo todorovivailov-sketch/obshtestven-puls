@@ -19,9 +19,9 @@ export default function Rezultati() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-navy-700 mb-2">Резултати</h1>
-        <p className="text-gray-500">Резултати от приключили анкети с графики и данни.</p>
+      <div className="page-header">
+        <h1 className="text-2xl font-bold text-navy-800 mb-1">Резултати от анкети</h1>
+        <p className="text-gray-500 text-sm">Резултати от приключили анкети с графики и данни.</p>
       </div>
 
       {/* Категории */}
@@ -30,11 +30,7 @@ export default function Rezultati() {
           <button
             key={cat}
             onClick={() => setCategory(cat)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-              category === cat
-                ? 'bg-navy-700 text-white border-navy-700'
-                : 'bg-white text-gray-600 border-gray-300 hover:border-navy-400 hover:text-navy-700'
-            }`}
+            className={`filter-pill ${category === cat ? 'filter-pill-active' : 'filter-pill-inactive'}`}
           >
             {cat}
           </button>
