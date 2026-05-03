@@ -4,25 +4,30 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply bg-gray-50 text-gray-900 antialiased;
+    font-family: 'Outfit', sans-serif;
   }
   h1, h2, h3, h4 {
+    font-family: 'Outfit', sans-serif;
     @apply font-semibold;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+    @apply bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide;
   }
   .btn-secondary {
-    @apply bg-navy-700 hover:bg-navy-800 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 text-sm;
+    @apply bg-navy-700 hover:bg-navy-800 text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 text-sm;
   }
   .btn-outline {
-    @apply border border-navy-600 text-navy-700 hover:bg-navy-700 hover:text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 text-sm;
+    @apply border border-navy-600 text-navy-700 hover:bg-navy-700 hover:text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 text-sm;
   }
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden;
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-shadow duration-200;
+  }
+  .card:hover {
+    @apply shadow-md;
   }
   .input {
     @apply w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-400 focus:border-transparent bg-white;
@@ -37,16 +42,42 @@
     @apply inline-flex items-center gap-1.5 bg-gray-50 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full border border-gray-200;
   }
   .page-header {
-    @apply border-b border-gray-100 pb-6 mb-8;
+    @apply pb-6 mb-8;
   }
   .filter-pill {
-    @apply px-4 py-1.5 rounded-full text-sm font-medium border transition-colors;
+    @apply px-4 py-1.5 rounded text-sm font-medium border transition-all duration-150;
   }
   .filter-pill-active {
     @apply bg-navy-800 text-white border-navy-800;
   }
   .filter-pill-inactive {
-    @apply bg-white text-gray-600 border-gray-200 hover:border-navy-300 hover:text-navy-700;
+    @apply bg-white text-gray-600 border-gray-200 hover:border-navy-400 hover:text-navy-800;
+  }
+  /* Editorial секционно заглавие с crimson акцент */
+  .section-heading {
+    @apply flex items-center gap-3 mb-6;
+  }
+  .section-heading::before {
+    content: '';
+    @apply block w-1 h-6 bg-crimson-600 rounded-full flex-shrink-0;
+  }
+  /* Compact heading with crimson bar — за inline употреба в flex justify-between редове */
+  .section-h {
+    @apply flex items-center gap-2.5 font-bold text-navy-800;
+  }
+  .section-h::before {
+    content: '';
+    @apply block w-1 h-5 bg-crimson-600 rounded-full flex-shrink-0;
+  }
+  /* Article card with top-border hover effect */
+  .article-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col;
+    border-top: 3px solid transparent;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  }
+  .article-card:hover {
+    border-top-color: #C0392B;
+    @apply shadow-md;
   }
 }
 
@@ -60,10 +91,7 @@
 .article-body h1 { @apply text-2xl font-bold mb-5 mt-8 text-navy-700; }
 .article-body h2 { @apply text-xl font-bold mb-4 mt-7 text-navy-700 border-b border-gray-200 pb-2; }
 .article-body h3 { @apply text-lg font-semibold mb-3 mt-6 text-navy-600; }
-.article-body p  {
-  @apply mb-5 text-gray-800;
-  line-height: 1.9;
-}
+.article-body p  { @apply mb-5 text-gray-800; line-height: 1.9; }
 .article-body ul { @apply list-disc pl-6 mb-5 space-y-2 text-gray-700; }
 .article-body ol { @apply list-decimal pl-6 mb-5 space-y-2 text-gray-700; }
 .article-body li { }

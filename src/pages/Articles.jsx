@@ -25,7 +25,7 @@ export default function Articles() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-navy-800 mb-1">Коментари и анализи</h1>
+        <h1 className="font-serif text-2xl font-bold text-navy-800 mb-1">Коментари и анализи</h1>
         <p className="text-gray-500 text-sm">Задълбочени анализи и коментари по актуални теми.</p>
       </div>
 

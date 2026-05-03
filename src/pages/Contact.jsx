@@ -20,7 +20,7 @@ export default function Contact() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-navy-800 mb-1">Контакти</h1>
+        <h1 className="font-serif text-2xl font-bold text-navy-800 mb-1">Контакти</h1>
         <p className="text-gray-500 text-sm">Изпратете ни съобщение — ще се свържем с вас.</p>
       </div>
 

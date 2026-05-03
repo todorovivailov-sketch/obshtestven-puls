@@ -28,7 +28,7 @@ export default function Suggestions() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-navy-800 mb-1">Предложения за граждански анкети</h1>
+        <h1 className="font-serif text-2xl font-bold text-navy-800 mb-1">Предложения за граждански анкети</h1>
         <p className="text-gray-500 text-sm">Имате идея за анкета, която да засегне важна тема за Силистра и региона? Споделете я с нас!</p>
       </div>
 

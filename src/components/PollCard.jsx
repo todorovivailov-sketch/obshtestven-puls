@@ -45,7 +45,7 @@ export default function PollCard({ poll, showResults = false }) {
   }
 
   return (
-    <div className="card">
+    <div className="card border-t-4 border-t-crimson-600">
       {/* Снимка */}
       {poll.image_url && (
         <div className="h-48 overflow-hidden">
@@ -56,7 +56,7 @@ export default function PollCard({ poll, showResults = false }) {
       {/* Хедър */}
       <div className="bg-navy-800 p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
-          <h2 className="text-white font-semibold text-base leading-snug">{poll.question}</h2>
+          <h2 className="font-serif text-white font-bold text-lg leading-snug">{poll.question}</h2>
           {isClosed
             ? <span className="badge-closed shrink-0">Приключила</span>
             : <span className="badge-active shrink-0"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />Активна</span>

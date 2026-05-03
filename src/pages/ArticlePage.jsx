@@ -92,7 +92,7 @@ export default function ArticlePage() {
         </div>
 
         {/* Заглавие */}
-        <h1 className="text-3xl md:text-4xl font-bold text-navy-800 leading-tight mb-6" style={{ lineHeight: '1.25' }}>
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-navy-800 mb-6" style={{ lineHeight: '1.2' }}>
           {article.title}
         </h1>
 
