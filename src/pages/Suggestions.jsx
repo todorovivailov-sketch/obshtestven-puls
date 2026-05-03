@@ -80,17 +80,15 @@ export default function Suggestions() {
         )}
       </div>
 
-      <div className="mt-6 card p-5 bg-blue-50 border border-blue-100">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-blue-800 mb-1">Как работи?</p>
-            <p className="text-sm text-blue-700">Изпращате предложение, екипът ни го разглежда и при достатъчен обществен интерес публикуваме анкетата на сайта.</p>
-          </div>
+      <div className="mt-6 rounded-r-md p-5 flex items-start gap-4" style={{ borderLeft: '3px solid #C0392B', background: '#EDE8DF' }}>
+        <div className="w-8 h-8 bg-white/60 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1.5">Как работи?</p>
+          <p className="text-sm text-gray-700 leading-relaxed">Изпращате предложение, екипът ни го разглежда и при достатъчен обществен интерес публикуваме анкетата на сайта.</p>
         </div>
       </div>
     </div>

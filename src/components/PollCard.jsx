@@ -127,9 +127,9 @@ export default function PollCard({ poll, showResults = false }) {
           <>
             <PollChart results={results || poll.results} options={poll.options} />
             {poll.result_summary && (
-              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
-                <p className="text-sm font-semibold text-blue-800 mb-1">Обобщение</p>
-                <p className="text-sm text-blue-700">{poll.result_summary}</p>
+              <div className="mt-5 pl-4 pr-3 py-3 rounded-r-md" style={{ borderLeft: '3px solid #C0392B', background: '#EDE8DF' }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Обобщение</p>
+                <p className="text-sm text-gray-700 leading-relaxed italic">{poll.result_summary}</p>
               </div>
             )}
           </>
