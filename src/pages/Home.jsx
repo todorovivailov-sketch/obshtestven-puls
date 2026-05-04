@@ -58,10 +58,10 @@ export default function Home() {
               <span className="text-crimson-400">Обществен пулс.</span>
             </h1>
             <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4">
-              Платформа за анкети – място, където мнението на хората има значение. Тук можете да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в нашия регион.
+              Платформа за анкети, коментари и анализи по обществено значими теми.
             </p>
             <p className="text-white/60 text-sm leading-relaxed mb-8">
-              Всички резултати от проведените анкети ще бъдат публикувани на сайта. Нашата цел е да създадем пространство за активна гражданска позиция.
+              Тук може да участвате в анкети по политически, обществено значими и актуални теми, които засягат ежедневието в Силистра и региона.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link to="/anketi" className="bg-crimson-600 hover:bg-crimson-700 text-white font-semibold px-7 py-2.5 rounded-lg transition-colors text-sm">
@@ -75,6 +75,65 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* Актуално */}
+      {!loading && (activePolls.length > 0 || articles.length > 0 || latestPolicy) && (
+        <section style={{ background: '#0D1F3C' }} className="border-b border-white/5">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-stretch divide-x divide-white/8">
+
+              {/* Лейбъл */}
+              <div className="flex items-center gap-2 pr-6 py-4 shrink-0">
+                <span className="w-1.5 h-1.5 bg-crimson-500 rounded-full animate-pulse shrink-0" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/35">Актуално</span>
+              </div>
+
+              {/* Последна активна анкета */}
+              {activePolls[0] && (
+                <Link
+                  to={`/anketi/${activePolls[0].id}`}
+                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0"
+                >
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-crimson-400 border border-crimson-800 px-2 py-0.5 rounded shrink-0">Анкета</span>
+                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
+                    {activePolls[0].question}
+                  </span>
+                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+              )}
+
+              {/* Последен анализ */}
+              {articles[0] && (
+                <Link
+                  to={`/komentari/${articles[0].id}`}
+                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0 hidden md:flex"
+                >
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 border border-white/10 px-2 py-0.5 rounded shrink-0">Анализ</span>
+                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
+                    {articles[0].title}
+                  </span>
+                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+              )}
+
+              {/* Последна политика */}
+              {latestPolicy && (
+                <Link
+                  to={`/prevodach/${latestPolicy.id}`}
+                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0 hidden lg:flex"
+                >
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 border border-white/10 px-2 py-0.5 rounded shrink-0">Политика</span>
+                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
+                    {latestPolicy.title}
+                  </span>
+                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+              )}
+
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Активни анкети */}
       <section className="max-w-6xl mx-auto px-4 py-12">
