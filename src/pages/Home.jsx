@@ -78,7 +78,7 @@ export default function Home() {
 
       {/* Активни анкети */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/70">
           <h2 className="section-h text-xl">Активни анкети</h2>
           <Link to="/anketi" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
             Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
@@ -89,7 +89,9 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-6">
             {[1, 2].map(i => <div key={i} className="card h-64 animate-pulse bg-gray-100" />)}
           </div>
-        ) : activePolls.length > 0 ? (
+        ) : activePolls.length === 1 ? (
+          <PollCard poll={activePolls[0]} landscape />
+        ) : activePolls.length > 1 ? (
           <div className="grid md:grid-cols-2 gap-6">
             {activePolls.map(p => <PollCard key={p.id} poll={p} />)}
           </div>
@@ -102,15 +104,19 @@ export default function Home() {
       {!loading && closedPolls.length > 0 && (
         <section className="py-12" style={{ background: '#EDE8DF' }}>
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-300/50">
               <h2 className="section-h text-xl">Последни резултати</h2>
               <Link to="/rezultati" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
                 Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </Link>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {closedPolls.map(p => <PollCard key={p.id} poll={p} showResults={true} />)}
-            </div>
+            {closedPolls.length === 1 ? (
+              <PollCard poll={closedPolls[0]} showResults={true} landscape />
+            ) : (
+              <div className="grid md:grid-cols-2 gap-6">
+                {closedPolls.map(p => <PollCard key={p.id} poll={p} showResults={true} />)}
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -119,7 +125,7 @@ export default function Home() {
       {!loading && latestPolicy && (
         <section className="py-12">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/70">
               <h2 className="section-h text-xl">Преводач на политики</h2>
               <Link to="/prevodach" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
                 Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
@@ -147,7 +153,7 @@ export default function Home() {
       {/* Последни анализи */}
       <section className="py-12" style={closedPolls.length === 0 ? { background: '#EDE8DF' } : {}}>
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/70">
             <h2 className="section-h text-xl">Последни анализи</h2>
             <Link to="/komentari" className="text-crimson-600 hover:text-crimson-700 text-sm font-medium flex items-center gap-1">
               Всички <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import PollChart from './PollChart'
 import { voteApi, getVotedPolls } from '../lib/api'
 
-export default function PollCard({ poll, showResults = false }) {
+export default function PollCard({ poll, showResults = false, landscape = false }) {
   const [selected, setSelected] = useState(null)
   const [results, setResults] = useState(null)
   const [voted, setVoted] = useState(showResults)
@@ -45,14 +45,15 @@ export default function PollCard({ poll, showResults = false }) {
   }
 
   return (
-    <div className="card border-t-4 border-t-crimson-600">
+    <div className={`card border-t-4 border-t-crimson-600${landscape ? ' md:flex md:flex-row' : ''}`}>
       {/* Снимка */}
       {poll.image_url && (
-        <div className="h-48 overflow-hidden">
+        <div className={landscape ? 'md:w-5/12 shrink-0 overflow-hidden h-52 md:h-auto' : 'h-48 overflow-hidden'}>
           <img src={poll.image_url} alt={poll.question} className="w-full h-full object-cover" />
         </div>
       )}
 
+      <div className={landscape ? 'flex-1 flex flex-col min-w-0' : ''}>
       {/* Хедър */}
       <div className="bg-navy-800 p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
@@ -180,6 +181,7 @@ export default function PollCard({ poll, showResults = false }) {
           </button>
         </div>
       </div>
+      </div>{/* landscape wrapper */}
     </div>
   )
 }
