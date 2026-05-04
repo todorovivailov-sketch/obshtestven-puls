@@ -9,6 +9,7 @@ export default function Home() {
   const [closedPolls, setClosedPolls] = useState([])
   const [articles, setArticles] = useState([])
   const [latestPolicy, setLatestPolicy] = useState(null)
+  const [recentItems, setRecentItems] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -18,10 +19,24 @@ export default function Home() {
       articlesApi.getAll(),
       policyTranslationsApi.getAll(),
     ]).then(([active, homeResults, arts, policies]) => {
-      setActivePolls(Array.isArray(active.value) ? active.value : [])
+      const activePollsArr = Array.isArray(active.value) ? active.value : []
+      const artsArr = Array.isArray(arts.value) ? arts.value : []
+      const policiesArr = Array.isArray(policies.value) ? policies.value : []
+
+      setActivePolls(activePollsArr)
       setClosedPolls(Array.isArray(homeResults.value) ? homeResults.value.slice(0, 2) : [])
-      setArticles(Array.isArray(arts.value) ? arts.value.slice(0, 3) : [])
-      setLatestPolicy(Array.isArray(policies.value) && policies.value.length > 0 ? policies.value[0] : null)
+      setArticles(artsArr.slice(0, 3))
+      setLatestPolicy(policiesArr.length > 0 ? policiesArr[0] : null)
+
+      // Актуално: обединяваме всичко, сортираме по дата, вземаме 3 най-нови
+      const all = [
+        ...activePollsArr.map(d => ({ type: 'poll', data: d, date: d.start_date || d.created_at })),
+        ...artsArr.map(d => ({ type: 'article', data: d, date: d.created_at || d.published_at })),
+        ...policiesArr.map(d => ({ type: 'policy', data: d, date: d.created_at })),
+      ]
+      all.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+      setRecentItems(all.slice(0, 3))
+
       setLoading(false)
     })
   }, [])
@@ -77,59 +92,69 @@ export default function Home() {
       </section>
 
       {/* Актуално */}
-      {!loading && (activePolls.length > 0 || articles.length > 0 || latestPolicy) && (
-        <section style={{ background: '#0D1F3C' }} className="border-b border-white/5">
+      {!loading && recentItems.length > 0 && (
+        <section className="py-12" style={{ background: '#EDE8DF' }}>
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-stretch divide-x divide-white/8">
-
-              {/* Лейбъл */}
-              <div className="flex items-center gap-2 pr-6 py-4 shrink-0">
-                <span className="w-1.5 h-1.5 bg-crimson-500 rounded-full animate-pulse shrink-0" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/35">Актуално</span>
-              </div>
-
-              {/* Последна активна анкета */}
-              {activePolls[0] && (
-                <Link
-                  to={`/anketi/${activePolls[0].id}`}
-                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-crimson-400 border border-crimson-800 px-2 py-0.5 rounded shrink-0">Анкета</span>
-                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
-                    {activePolls[0].question}
-                  </span>
-                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </Link>
-              )}
-
-              {/* Последен анализ */}
-              {articles[0] && (
-                <Link
-                  to={`/komentari/${articles[0].id}`}
-                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0 hidden md:flex"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 border border-white/10 px-2 py-0.5 rounded shrink-0">Анализ</span>
-                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
-                    {articles[0].title}
-                  </span>
-                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </Link>
-              )}
-
-              {/* Последна политика */}
-              {latestPolicy && (
-                <Link
-                  to={`/prevodach/${latestPolicy.id}`}
-                  className="flex-1 flex items-center gap-3 px-6 py-4 group hover:bg-white/4 transition-colors min-w-0 hidden lg:flex"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 border border-white/10 px-2 py-0.5 rounded shrink-0">Политика</span>
-                  <span className="text-white/70 text-sm leading-snug line-clamp-1 group-hover:text-white transition-colors min-w-0 truncate">
-                    {latestPolicy.title}
-                  </span>
-                  <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-crimson-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </Link>
-              )}
-
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-300/50">
+              <h2 className="section-h text-xl">Актуално</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {recentItems.map((item, i) => {
+                if (item.type === 'poll') return (
+                  <Link key={i} to={`/anketi/${item.data.id}`} className="article-card group flex flex-col">
+                    {item.data.image_url && (
+                      <div className="h-36 overflow-hidden">
+                        <img src={item.data.image_url} alt={item.data.question} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-5 flex flex-col flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-crimson-600 mb-2">Анкета</span>
+                      <p className="font-serif font-bold text-navy-800 leading-snug line-clamp-3 flex-1">{item.data.question}</p>
+                      <div className="mt-4 flex items-center justify-between">
+                        <span className="text-xs text-gray-400">
+                          {item.data.start_date && new Date(item.data.start_date).toLocaleDateString('bg-BG')}
+                        </span>
+                        <span className="text-xs text-crimson-600 font-medium">Гласувай →</span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+                if (item.type === 'article') return (
+                  <Link key={i} to={`/komentari/${item.data.id}`} className="article-card group flex flex-col">
+                    {item.data.image_url && (
+                      <div className="h-36 overflow-hidden">
+                        <img src={item.data.image_url} alt={item.data.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-5 flex flex-col flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
+                        {item.data.category === 'analysis' ? 'Анализ' : item.data.category === 'comment' ? 'Коментар' : 'Новина'}
+                      </span>
+                      <p className="font-serif font-bold text-navy-800 leading-snug line-clamp-3 flex-1">{item.data.title}</p>
+                      <div className="mt-4">
+                        <span className="text-xs text-crimson-600 font-medium">Прочети →</span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+                if (item.type === 'policy') return (
+                  <Link key={i} to={`/prevodach/${item.data.id}`} className="article-card group flex flex-col">
+                    {item.data.image_url && (
+                      <div className="h-36 overflow-hidden">
+                        <img src={item.data.image_url} alt={item.data.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-5 flex flex-col flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Политика</span>
+                      <p className="font-serif font-bold text-navy-800 leading-snug line-clamp-3 flex-1">{item.data.title}</p>
+                      <div className="mt-4">
+                        <span className="text-xs text-crimson-600 font-medium">Прочети →</span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+                return null
+              })}
             </div>
           </div>
         </section>
