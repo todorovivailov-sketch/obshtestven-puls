@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { createHash } from 'crypto'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+const voteHashSecret = process.env.VOTE_HASH_SECRET || process.env.JWT_SECRET || 'obshtestven-puls-vote-hash'
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -18,23 +19,44 @@ export default async function handler(req, res) {
     const { poll_id, option_id, voter_id } = req.body
     if (!poll_id || !option_id) return res.status(400).json({ error: 'Липсват данни' })
 
-    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown'
-    const voter_hash = createHash('sha256').update((voter_id || ip) + poll_id).digest('hex')
-    const ip_hash = createHash('sha256').update(ip + poll_id).digest('hex')
+    const ip = getClientIp(req)
+    const userAgent = String(req.headers['user-agent'] || '').slice(0, 240)
+    const acceptLanguage = String(req.headers['accept-language'] || '').slice(0, 80)
 
-    // Проверка по voter_id хеш ИЛИ IP хеш — двоен слой защита
-    const { data: existing } = await supabase
+    // Legacy hashes keep duplicate detection working for votes already recorded
+    // before the stronger columns were added.
+    const legacyVoterHash = createHash('sha256').update((voter_id || ip) + poll_id).digest('hex')
+    const legacyIpHash = createHash('sha256').update(ip + poll_id).digest('hex')
+    const voterHash = hashVotePart('voter', poll_id, voter_id || ip)
+    const fingerprintHash = hashVotePart('fingerprint', poll_id, ip, userAgent, acceptLanguage)
+
+    const duplicateFilters = [
+      `ip_hash.eq.${legacyVoterHash}`,
+      `ip_hash.eq.${legacyIpHash}`,
+      `voter_hash.eq.${voterHash}`,
+      `fingerprint_hash.eq.${fingerprintHash}`,
+    ].join(',')
+
+    const { data: existing, error: existingError } = await supabase
       .from('votes')
       .select('id')
       .eq('poll_id', poll_id)
-      .or(`ip_hash.eq.${voter_hash},ip_hash.eq.${ip_hash}`)
+      .or(duplicateFilters)
       .limit(1)
+
+    if (existingError) throw existingError
 
     if (existing?.length) {
       return res.status(409).json({ error: 'Вече сте гласували.', already_voted: true })
     }
 
-    const { error } = await supabase.from('votes').insert({ poll_id, option_id, ip_hash: voter_hash })
+    const { error } = await supabase.from('votes').insert({
+      poll_id,
+      option_id,
+      ip_hash: legacyVoterHash,
+      voter_hash: voterHash,
+      fingerprint_hash: fingerprintHash,
+    })
 
     if (error) {
       if (error.code === '23505') return res.status(409).json({ error: 'Вече сте гласували.', already_voted: true })
@@ -56,4 +78,18 @@ export default async function handler(req, res) {
     console.error(err)
     res.status(500).json({ error: 'Сървърна грешка' })
   }
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for']
+  if (forwarded) return String(forwarded).split(',')[0].trim()
+  const realIp = req.headers['x-real-ip']
+  if (realIp) return String(realIp).trim()
+  return req.socket?.remoteAddress || 'unknown'
+}
+
+function hashVotePart(...parts) {
+  return createHash('sha256')
+    .update(`${voteHashSecret}:${parts.map(part => String(part || '')).join(':')}`)
+    .digest('hex')
 }

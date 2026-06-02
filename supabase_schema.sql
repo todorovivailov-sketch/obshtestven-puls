@@ -36,6 +36,8 @@ CREATE TABLE votes (
   poll_id    UUID NOT NULL REFERENCES polls(id) ON DELETE CASCADE,
   option_id  UUID NOT NULL REFERENCES poll_options(id) ON DELETE CASCADE,
   ip_hash    TEXT NOT NULL,              -- sha256 на IP — не пазим реалния IP
+  voter_hash TEXT,
+  fingerprint_hash TEXT,
   voted_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (poll_id, ip_hash)              -- 1 глас на IP на анкета
 );
@@ -75,6 +77,8 @@ CREATE INDEX idx_polls_status      ON polls(status);
 CREATE INDEX idx_polls_created     ON polls(created_at DESC);
 CREATE INDEX idx_votes_poll        ON votes(poll_id);
 CREATE INDEX idx_votes_option      ON votes(option_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_votes_poll_voter_hash ON votes(poll_id, voter_hash) WHERE voter_hash IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_votes_poll_fingerprint_hash ON votes(poll_id, fingerprint_hash) WHERE fingerprint_hash IS NOT NULL;
 CREATE INDEX idx_articles_category ON articles(category);
 CREATE INDEX idx_articles_created  ON articles(created_at DESC);
 
