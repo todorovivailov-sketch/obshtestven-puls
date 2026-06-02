@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     const { filename, contentType, bucket } = req.body
-    const validBuckets = ['article-images', 'article-docs', 'poll-images', 'author-images']
+    const validBuckets = ['article-images', 'article-docs', 'poll-images', 'author-images', 'media-files']
     if (!validBuckets.includes(bucket)) return res.status(400).json({ error: 'Невалиден bucket' })
 
     const ext = filename.split('.').pop().toLowerCase()

@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       }
 
       let query = supabase.from('policy_translations')
-        .select('id, title, author, author_image_url, image_url, published, created_at')
+        .select('id, title, author, author_image_url, image_url, image_source, video_url, video_source, published, created_at')
         .order('created_at', { ascending: false })
       if (!isAdmin) query = query.eq('published', true)
       const { data, error } = await query
@@ -36,10 +36,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { title, author, author_image_url, body, image_url, docx_url, published } = req.body
+      const { title, author, author_image_url, body, image_url, image_source, video_url, video_source, docx_url, published } = req.body
       if (!title || !body) return res.status(400).json({ error: 'Липсват данни' })
       const { data, error } = await supabase.from('policy_translations')
-        .insert({ title, author: author || null, author_image_url: author_image_url || null, body, image_url: image_url || null, docx_url: docx_url || null, published: published ?? true })
+        .insert({ title, author: author || null, author_image_url: author_image_url || null, body, image_url: image_url || null, image_source: image_source || null, video_url: video_url || null, video_source: video_source || null, docx_url: docx_url || null, published: published ?? true })
         .select().single()
       if (error) throw error
       return res.status(201).json(data)

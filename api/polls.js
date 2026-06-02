@@ -57,11 +57,11 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { question, category, description, start_date, end_date, options, image_url } = req.body
+      const { question, category, description, start_date, end_date, options, image_url, image_source, video_url, video_source } = req.body
       if (!question || !options?.length) return res.status(400).json({ error: 'Липсват данни' })
 
       const { data: poll, error: pe } = await supabase
-        .from('polls').insert({ question, category: category || 'Политика', description, start_date, end_date, image_url }).select().single()
+        .from('polls').insert({ question, category: category || 'Политика', description, start_date, end_date, image_url, image_source: image_source || null, video_url: video_url || null, video_source: video_source || null }).select().single()
       if (pe) throw pe
 
       const optRows = options.map((label, i) => ({ poll_id: poll.id, label, position: i }))
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
       if (!verifyAdmin(req.headers.authorization)) return res.status(401).json({ error: 'Неоторизиран' })
-      const { id, status, question, description, category, start_date, end_date, image_url, results_published, result_summary, show_on_home } = req.body
+      const { id, status, question, description, category, start_date, end_date, image_url, image_source, video_url, video_source, results_published, result_summary, show_on_home } = req.body
       const fields = {}
       if (status !== undefined) fields.status = status
       if (question !== undefined) fields.question = question
@@ -82,6 +82,9 @@ export default async function handler(req, res) {
       if (start_date !== undefined) fields.start_date = start_date
       if (end_date !== undefined) fields.end_date = end_date
       if (image_url !== undefined) fields.image_url = image_url
+      if (image_source !== undefined) fields.image_source = image_source
+      if (video_url !== undefined) fields.video_url = video_url
+      if (video_source !== undefined) fields.video_source = video_source
       if (results_published !== undefined) fields.results_published = results_published
       if (result_summary !== undefined) fields.result_summary = result_summary
       if (show_on_home !== undefined) fields.show_on_home = show_on_home

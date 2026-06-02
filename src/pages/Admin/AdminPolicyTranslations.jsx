@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { policyTranslationsApi, uploadApi } from '../../lib/api'
 
-const EMPTY_FORM = { title: '', author: '', body: '', published: true }
+const EMPTY_FORM = { title: '', author: '', body: '', published: true, image_source: '', video_url: '', video_source: '' }
 
 export default function AdminPolicyTranslations() {
   const [items, setItems] = useState([])
@@ -12,6 +12,7 @@ export default function AdminPolicyTranslations() {
   const [showForm, setShowForm] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [authorImageFile, setAuthorImageFile] = useState(null)
+  const [videoFile, setVideoFile] = useState(null)
   const [docxFile, setDocxFile] = useState(null)
   const [uploadingDocx, setUploadingDocx] = useState(false)
 
@@ -19,6 +20,7 @@ export default function AdminPolicyTranslations() {
   const [editForm, setEditForm] = useState({})
   const [editImageFile, setEditImageFile] = useState(null)
   const [editAuthorImageFile, setEditAuthorImageFile] = useState(null)
+  const [editVideoFile, setEditVideoFile] = useState(null)
   const [editDocxFile, setEditDocxFile] = useState(null)
   const [editUploadingDocx, setEditUploadingDocx] = useState(false)
   const [editSaving, setEditSaving] = useState(false)
@@ -26,9 +28,11 @@ export default function AdminPolicyTranslations() {
 
   const imageRef = useRef()
   const authorImageRef = useRef()
+  const videoRef = useRef()
   const docxRef = useRef()
   const editImageRef = useRef()
   const editAuthorImageRef = useRef()
+  const editVideoRef = useRef()
   const editDocxRef = useRef()
 
   async function load() {
@@ -65,17 +69,20 @@ export default function AdminPolicyTranslations() {
     try {
       let image_url = null
       let author_image_url = null
+      let video_url = form.video_url || null
       let docx_url = null
 
       if (imageFile) image_url = await uploadApi.uploadFile(imageFile, 'article-images')
       if (authorImageFile) author_image_url = await uploadApi.uploadFile(authorImageFile, 'author-images')
+      if (videoFile) video_url = await uploadApi.uploadFile(videoFile, 'media-files')
       if (docxFile) docx_url = await uploadApi.uploadFile(docxFile, 'article-docs')
 
-      const res = await policyTranslationsApi.create({ ...form, image_url, author_image_url, docx_url })
+      const res = await policyTranslationsApi.create({ ...form, image_url, author_image_url, video_url, docx_url })
       if (res.id) {
         setForm(EMPTY_FORM)
         setImageFile(null)
         setAuthorImageFile(null)
+        setVideoFile(null)
         setDocxFile(null)
         setShowForm(false)
         load()
@@ -97,10 +104,14 @@ export default function AdminPolicyTranslations() {
       body: full.body || '',
       published: full.published ?? true,
       image_url: full.image_url || '',
+      image_source: full.image_source || '',
+      video_url: full.video_url || '',
+      video_source: full.video_source || '',
       author_image_url: full.author_image_url || '',
     })
     setEditImageFile(null)
     setEditAuthorImageFile(null)
+    setEditVideoFile(null)
     setEditDocxFile(null)
     setEditError(null)
   }
@@ -110,6 +121,7 @@ export default function AdminPolicyTranslations() {
     setEditForm({})
     setEditImageFile(null)
     setEditAuthorImageFile(null)
+    setEditVideoFile(null)
     setEditDocxFile(null)
     setEditError(null)
   }
@@ -122,10 +134,12 @@ export default function AdminPolicyTranslations() {
     try {
       let image_url = editForm.image_url || null
       let author_image_url = editForm.author_image_url || null
+      let video_url = editForm.video_url || null
       let docx_url = editItem.docx_url || null
 
       if (editImageFile) image_url = await uploadApi.uploadFile(editImageFile, 'article-images')
       if (editAuthorImageFile) author_image_url = await uploadApi.uploadFile(editAuthorImageFile, 'author-images')
+      if (editVideoFile) video_url = await uploadApi.uploadFile(editVideoFile, 'media-files')
       if (editDocxFile) docx_url = await uploadApi.uploadFile(editDocxFile, 'article-docs')
 
       const res = await policyTranslationsApi.update({
@@ -135,6 +149,9 @@ export default function AdminPolicyTranslations() {
         body: editForm.body,
         published: editForm.published,
         image_url,
+        image_source: editForm.image_source || null,
+        video_url,
+        video_source: editForm.video_source || null,
         author_image_url,
         docx_url,
       })
@@ -230,6 +247,43 @@ export default function AdminPolicyTranslations() {
               </div>
             </div>
 
+            <div>
+              <label className="label">Източник на снимката</label>
+              <input
+                className="input"
+                value={form.image_source}
+                onChange={e => setForm({ ...form, image_source: e.target.value })}
+                placeholder="Напр. автор, институция, личен архив, URL..."
+              />
+            </div>
+
+            <div>
+              <label className="label">Видео (YouTube линк или локален файл)</label>
+              <div className="grid md:grid-cols-[1fr_auto] gap-3">
+                <input
+                  className="input"
+                  value={form.video_url}
+                  onChange={e => setForm({ ...form, video_url: e.target.value })}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
+                <button type="button" onClick={() => videoRef.current?.click()} className="btn-outline">
+                  {videoFile ? 'Смени файл' : 'Качи видео'}
+                </button>
+              </div>
+              {videoFile && <p className="text-xs text-green-600 mt-2">{videoFile.name}</p>}
+              <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={e => setVideoFile(e.target.files[0])} />
+            </div>
+
+            <div>
+              <label className="label">Източник на видеото</label>
+              <input
+                className="input"
+                value={form.video_source}
+                onChange={e => setForm({ ...form, video_source: e.target.value })}
+                placeholder="Напр. YouTube канал, автор, институция..."
+              />
+            </div>
+
             {/* Word файл */}
             <div>
               <label className="label">Качи Word документ (.docx) — автоматично се конвертира</label>
@@ -269,7 +323,7 @@ export default function AdminPolicyTranslations() {
               <button type="submit" disabled={saving || uploadingDocx} className="btn-primary">
                 {saving ? 'Запазване...' : 'Публикувай'}
               </button>
-              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setImageFile(null); setAuthorImageFile(null) }} className="btn-outline">Отказ</button>
+              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setImageFile(null); setAuthorImageFile(null); setVideoFile(null) }} className="btn-outline">Отказ</button>
             </div>
           </form>
         </div>
@@ -389,6 +443,51 @@ export default function AdminPolicyTranslations() {
                   )}
                   <input ref={editImageRef} type="file" accept="image/*" className="hidden" onChange={e => setEditImageFile(e.target.files[0])} />
                 </div>
+              </div>
+
+              <div>
+                <label className="label">Източник на снимката</label>
+                <input
+                  className="input"
+                  value={editForm.image_source || ''}
+                  onChange={e => setEditForm(f => ({ ...f, image_source: e.target.value }))}
+                  placeholder="Напр. автор, институция, личен архив, URL..."
+                />
+              </div>
+
+              <div>
+                <label className="label">Видео (YouTube линк или локален файл)</label>
+                {editForm.video_url && !editVideoFile && (
+                  <div className="mb-2 flex items-center gap-3">
+                    <a href={editForm.video_url} target="_blank" rel="noreferrer" className="text-xs text-navy-600 hover:underline truncate">
+                      {editForm.video_url}
+                    </a>
+                    <button type="button" onClick={() => setEditForm(f => ({ ...f, video_url: '' }))} className="text-xs text-crimson-600 hover:underline">Премахни</button>
+                  </div>
+                )}
+                <div className="grid md:grid-cols-[1fr_auto] gap-3">
+                  <input
+                    className="input"
+                    value={editForm.video_url || ''}
+                    onChange={e => setEditForm(f => ({ ...f, video_url: e.target.value }))}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <button type="button" onClick={() => editVideoRef.current?.click()} className="btn-outline">
+                    {editVideoFile ? 'Смени файл' : 'Качи видео'}
+                  </button>
+                </div>
+                {editVideoFile && <p className="text-xs text-green-600 mt-2">{editVideoFile.name}</p>}
+                <input ref={editVideoRef} type="file" accept="video/*" className="hidden" onChange={e => setEditVideoFile(e.target.files[0])} />
+              </div>
+
+              <div>
+                <label className="label">Източник на видеото</label>
+                <input
+                  className="input"
+                  value={editForm.video_source || ''}
+                  onChange={e => setEditForm(f => ({ ...f, video_source: e.target.value }))}
+                  placeholder="Напр. YouTube канал, автор, институция..."
+                />
               </div>
 
               {/* Word файл */}

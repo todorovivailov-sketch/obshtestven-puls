@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PollChart from './PollChart'
+import { MediaCredit, VideoBlock } from './MediaBlock'
 import { voteApi, getVotedPolls } from '../lib/api'
 
 export default function PollCard({ poll, showResults = false, landscape = false }) {
@@ -48,9 +49,14 @@ export default function PollCard({ poll, showResults = false, landscape = false 
     <div className={`card border-t-4 border-t-crimson-600${landscape ? ' md:flex md:flex-row' : ''}`}>
       {/* Снимка */}
       {poll.image_url && (
-        <div className={landscape ? 'md:w-5/12 shrink-0 overflow-hidden h-52 md:h-auto' : 'h-48 overflow-hidden'}>
-          <img src={poll.image_url} alt={poll.question} className="w-full h-full object-cover" />
-        </div>
+        <figure className={landscape ? 'md:w-5/12 shrink-0 bg-white' : 'bg-white'}>
+          <div className={landscape ? 'overflow-hidden h-52 md:h-full' : 'h-48 overflow-hidden'}>
+            <img src={poll.image_url} alt={poll.question} className="w-full h-full object-cover" />
+          </div>
+          <div className="px-4 pb-3">
+            <MediaCredit source={poll.image_source} />
+          </div>
+        </figure>
       )}
 
       <div className={landscape ? 'flex-1 flex flex-col min-w-0' : ''}>
@@ -87,6 +93,13 @@ export default function PollCard({ poll, showResults = false, landscape = false 
       </div>
 
       <div className="p-5">
+        {poll.video_url && (
+          <figure className="mb-5">
+            <VideoBlock url={poll.video_url} title={poll.question} className="rounded-xl" />
+            <MediaCredit source={poll.video_source} />
+          </figure>
+        )}
+
         {/* Гласуване */}
         {!voted && !isClosed && (
           <div className="space-y-3">

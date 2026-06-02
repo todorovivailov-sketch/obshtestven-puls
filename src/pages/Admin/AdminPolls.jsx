@@ -3,7 +3,7 @@ import { pollsApi, uploadApi } from '../../lib/api'
 import PollChart from '../../components/PollChart'
 
 const CATEGORIES = ['Политика', 'Общество', 'Култура', 'Медии', 'Развлечения']
-const EMPTY_FORM = { question: '', description: '', category: 'Политика', start_date: '', end_date: '', options: ['', ''] }
+const EMPTY_FORM = { question: '', description: '', category: 'Политика', start_date: '', end_date: '', options: ['', ''], image_source: '', video_url: '', video_source: '' }
 
 export default function AdminPolls() {
   const [polls, setPolls] = useState([])
@@ -14,6 +14,7 @@ export default function AdminPolls() {
   const [showForm, setShowForm] = useState(false)
   const [expandedId, setExpandedId] = useState(null)
   const [imageFile, setImageFile] = useState(null)
+  const [videoFile, setVideoFile] = useState(null)
   const [publishingResults, setPublishingResults] = useState(null)
   const [summaryForm, setSummaryForm] = useState(null)
 
@@ -21,11 +22,14 @@ export default function AdminPolls() {
   const [editPoll, setEditPoll] = useState(null) // poll обект
   const [editForm, setEditForm] = useState({})
   const [editImageFile, setEditImageFile] = useState(null)
+  const [editVideoFile, setEditVideoFile] = useState(null)
   const [editSaving, setEditSaving] = useState(false)
   const [editError, setEditError] = useState(null)
 
   const imageRef = useRef()
+  const videoRef = useRef()
   const editImageRef = useRef()
+  const editVideoRef = useRef()
 
   async function loadPolls() {
     const [active, closed] = await Promise.allSettled([
@@ -65,11 +69,21 @@ export default function AdminPolls() {
     setError(null)
 
     let image_url = null
+    let video_url = form.video_url || null
     if (imageFile) {
       try {
         image_url = await uploadApi.uploadFile(imageFile, 'poll-images')
       } catch (err) {
         setError('Грешка при качване на снимката: ' + err.message)
+        setSaving(false)
+        return
+      }
+    }
+    if (videoFile) {
+      try {
+        video_url = await uploadApi.uploadFile(videoFile, 'media-files')
+      } catch (err) {
+        setError('Грешка при качване на видеото: ' + err.message)
         setSaving(false)
         return
       }
@@ -83,12 +97,16 @@ export default function AdminPolls() {
       end_date: form.end_date || null,
       options: opts,
       image_url,
+      image_source: form.image_source || null,
+      video_url,
+      video_source: form.video_source || null,
     }
 
     const res = await pollsApi.create(payload, false)
     if (res.id) {
       setForm(EMPTY_FORM)
       setImageFile(null)
+      setVideoFile(null)
       setShowForm(false)
       loadPolls()
     } else {
@@ -106,9 +124,13 @@ export default function AdminPolls() {
       start_date: poll.start_date ? poll.start_date.split('T')[0] : '',
       end_date: poll.end_date ? poll.end_date.split('T')[0] : '',
       image_url: poll.image_url || '',
+      image_source: poll.image_source || '',
+      video_url: poll.video_url || '',
+      video_source: poll.video_source || '',
       options: poll.options ? poll.options.map(o => o.label) : ['', ''],
     })
     setEditImageFile(null)
+    setEditVideoFile(null)
     setEditError(null)
   }
 
@@ -116,6 +138,7 @@ export default function AdminPolls() {
     setEditPoll(null)
     setEditForm({})
     setEditImageFile(null)
+    setEditVideoFile(null)
     setEditError(null)
   }
 
@@ -126,12 +149,22 @@ export default function AdminPolls() {
     setEditError(null)
 
     let image_url = editForm.image_url || null
+    let video_url = editForm.video_url || null
 
     if (editImageFile) {
       try {
         image_url = await uploadApi.uploadFile(editImageFile, 'poll-images')
       } catch (err) {
         setEditError('Грешка при качване на снимката: ' + err.message)
+        setEditSaving(false)
+        return
+      }
+    }
+    if (editVideoFile) {
+      try {
+        video_url = await uploadApi.uploadFile(editVideoFile, 'media-files')
+      } catch (err) {
+        setEditError('Грешка при качване на видеото: ' + err.message)
         setEditSaving(false)
         return
       }
@@ -148,6 +181,9 @@ export default function AdminPolls() {
       start_date: editForm.start_date || null,
       end_date: editForm.end_date || null,
       image_url,
+      image_source: editForm.image_source || null,
+      video_url,
+      video_source: editForm.video_source || null,
       options: opts,
     })
 
@@ -191,7 +227,7 @@ export default function AdminPolls() {
   }
 
   function openSummaryForm(poll) {
-    setSummaryForm({ pollId: poll.id, text: '' })
+    setSummaryForm({ pollId: poll.id, text: poll.result_summary || '', alreadyPublished: Boolean(poll.results_published) })
   }
 
   async function confirmPublish() {
@@ -199,8 +235,17 @@ export default function AdminPolls() {
     setPublishingResults(poll.id)
     const { results } = await pollsApi.getOne(poll.id)
     setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, results } : p))
-    await pollsApi.update({ id: poll.id, status: 'closed', results_published: true, result_summary: summaryForm.text || null, show_on_home: true })
-    setPolls(ps => ps.map(p => p.id === poll.id ? { ...p, status: 'closed', results_published: true, result_summary: summaryForm.text, show_on_home: true } : p))
+    const payload = summaryForm.alreadyPublished
+      ? { id: poll.id, result_summary: summaryForm.text || null }
+      : { id: poll.id, status: 'closed', results_published: true, result_summary: summaryForm.text || null, show_on_home: true }
+    await pollsApi.update(payload)
+    setPolls(ps => ps.map(p => p.id === poll.id ? {
+      ...p,
+      status: summaryForm.alreadyPublished ? p.status : 'closed',
+      results_published: true,
+      result_summary: summaryForm.text,
+      show_on_home: summaryForm.alreadyPublished ? p.show_on_home : true,
+    } : p))
     setExpandedId(poll.id)
     setPublishingResults(null)
     setSummaryForm(null)
@@ -302,6 +347,43 @@ export default function AdminPolls() {
               </div>
             </div>
 
+            <div>
+              <label className="label">Източник на снимката</label>
+              <input
+                className="input"
+                value={form.image_source}
+                onChange={e => setForm({ ...form, image_source: e.target.value })}
+                placeholder="Напр. Община Силистра, личен архив, URL..."
+              />
+            </div>
+
+            <div>
+              <label className="label">Видео (YouTube линк или локален файл)</label>
+              <div className="grid md:grid-cols-[1fr_auto] gap-3">
+                <input
+                  className="input"
+                  value={form.video_url}
+                  onChange={e => setForm({ ...form, video_url: e.target.value })}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
+                <button type="button" onClick={() => videoRef.current?.click()} className="btn-outline">
+                  {videoFile ? 'Смени файл' : 'Качи видео'}
+                </button>
+              </div>
+              {videoFile && <p className="text-xs text-green-600 mt-2">{videoFile.name}</p>}
+              <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={e => setVideoFile(e.target.files[0])} />
+            </div>
+
+            <div>
+              <label className="label">Източник на видеото</label>
+              <input
+                className="input"
+                value={form.video_source}
+                onChange={e => setForm({ ...form, video_source: e.target.value })}
+                placeholder="Напр. YouTube канал, автор, институция..."
+              />
+            </div>
+
             {/* Варианти за отговор */}
             <div>
               <label className="label">Варианти за отговор *</label>
@@ -347,7 +429,7 @@ export default function AdminPolls() {
               <button type="submit" disabled={saving} className="btn-primary">
                 {saving ? 'Публикуване...' : 'Публикувай анкетата'}
               </button>
-              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setImageFile(null) }} className="btn-outline">
+              <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setImageFile(null); setVideoFile(null) }} className="btn-outline">
                 Отказ
               </button>
             </div>
@@ -414,6 +496,14 @@ export default function AdminPolls() {
                     )}
                     {poll.results_published && (
                       <button
+                        onClick={() => openSummaryForm(poll)}
+                        className="text-sm text-blue-700 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium transition-colors"
+                      >
+                        Редактирай анализ
+                      </button>
+                    )}
+                    {poll.results_published && (
+                      <button
                         onClick={() => toggleShowOnHome(poll)}
                         className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-colors ${
                           poll.show_on_home
@@ -473,7 +563,14 @@ export default function AdminPolls() {
                 <div className="border-t border-gray-100 p-5 bg-gray-50">
                   <div className="mb-3 flex items-center justify-between">
                     <h4 className="font-semibold text-navy-700 text-sm">Резултати от анкетата</h4>
-                    {!poll.results_published && (
+                    {poll.results_published ? (
+                      <button
+                        onClick={() => openSummaryForm(poll)}
+                        className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-medium transition-colors"
+                      >
+                        Редактирай анализ
+                      </button>
+                    ) : (
                       <button
                         onClick={() => openSummaryForm(poll)}
                         disabled={publishingResults === poll.id}
@@ -495,8 +592,8 @@ export default function AdminPolls() {
       {summaryForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold text-navy-700 mb-2">Публикуване на резултати</h3>
-            <p className="text-sm text-gray-500 mb-4">Добавете кратко обобщение на резултатите (незадължително).</p>
+            <h3 className="text-lg font-bold text-navy-700 mb-2">{summaryForm.alreadyPublished ? 'Редактиране на анализ' : 'Публикуване на резултати'}</h3>
+            <p className="text-sm text-gray-500 mb-4">{summaryForm.alreadyPublished ? 'Променете анализа към вече публикуваните резултати.' : 'Добавете кратко обобщение на резултатите (незадължително).'}</p>
             <textarea
               className="input resize-none w-full"
               rows={4}
@@ -510,7 +607,7 @@ export default function AdminPolls() {
                 disabled={publishingResults !== null}
                 className="btn-primary flex-1"
               >
-                {publishingResults ? 'Публикуване...' : 'Публикувай'}
+                {publishingResults ? 'Запазване...' : (summaryForm.alreadyPublished ? 'Запази анализа' : 'Публикувай')}
               </button>
               <button onClick={() => setSummaryForm(null)} className="btn-outline flex-1">Отказ</button>
             </div>
@@ -659,6 +756,57 @@ export default function AdminPolls() {
                   )}
                   <input ref={editImageRef} type="file" accept="image/*" className="hidden" onChange={e => setEditImageFile(e.target.files[0])} />
                 </div>
+              </div>
+
+              <div>
+                <label className="label">Източник на снимката</label>
+                <input
+                  className="input"
+                  value={editForm.image_source || ''}
+                  onChange={e => setEditForm(f => ({ ...f, image_source: e.target.value }))}
+                  placeholder="Напр. Община Силистра, личен архив, URL..."
+                />
+              </div>
+
+              <div>
+                <label className="label">Видео (YouTube линк или локален файл)</label>
+                {editForm.video_url && !editVideoFile && (
+                  <div className="mb-2 flex items-center gap-3">
+                    <a href={editForm.video_url} target="_blank" rel="noreferrer" className="text-xs text-navy-600 hover:underline truncate">
+                      {editForm.video_url}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setEditForm(f => ({ ...f, video_url: '' }))}
+                      className="text-xs text-crimson-600 hover:underline"
+                    >
+                      Премахни видеото
+                    </button>
+                  </div>
+                )}
+                <div className="grid md:grid-cols-[1fr_auto] gap-3">
+                  <input
+                    className="input"
+                    value={editForm.video_url || ''}
+                    onChange={e => setEditForm(f => ({ ...f, video_url: e.target.value }))}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <button type="button" onClick={() => editVideoRef.current?.click()} className="btn-outline">
+                    {editVideoFile ? 'Смени файл' : 'Качи видео'}
+                  </button>
+                </div>
+                {editVideoFile && <p className="text-xs text-green-600 mt-2">{editVideoFile.name}</p>}
+                <input ref={editVideoRef} type="file" accept="video/*" className="hidden" onChange={e => setEditVideoFile(e.target.files[0])} />
+              </div>
+
+              <div>
+                <label className="label">Източник на видеото</label>
+                <input
+                  className="input"
+                  value={editForm.video_source || ''}
+                  onChange={e => setEditForm(f => ({ ...f, video_source: e.target.value }))}
+                  placeholder="Напр. YouTube канал, автор, институция..."
+                />
               </div>
 
               {editError && <p className="text-crimson-600 text-sm">{editError}</p>}

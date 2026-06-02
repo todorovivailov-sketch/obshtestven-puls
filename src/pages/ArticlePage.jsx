@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { articlesApi } from '../lib/api'
+import { MediaCredit, VideoBlock } from '../components/MediaBlock'
 
 function formatBody(body) {
   if (!body) return ''
@@ -125,6 +126,14 @@ export default function ArticlePage() {
               className="w-full md:rounded-xl object-cover shadow-md"
               style={{ maxHeight: '480px' }}
             />
+            <MediaCredit source={article.image_source} />
+          </figure>
+        )}
+
+        {article.video_url && (
+          <figure className="mb-8 -mx-4 md:mx-0">
+            <VideoBlock url={article.video_url} title={article.title} className="md:rounded-xl" />
+            <MediaCredit source={article.video_source} />
           </figure>
         )}
 

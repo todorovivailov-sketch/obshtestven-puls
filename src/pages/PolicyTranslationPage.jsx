@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { policyTranslationsApi } from '../lib/api'
+import { MediaCredit, VideoBlock } from '../components/MediaBlock'
 
 function formatBody(body) {
   if (!body) return ''
@@ -102,6 +103,14 @@ export default function PolicyTranslationPage() {
               className="w-full md:rounded-xl object-cover shadow-md"
               style={{ maxHeight: '480px' }}
             />
+            <MediaCredit source={item.image_source} />
+          </figure>
+        )}
+
+        {item.video_url && (
+          <figure className="mb-8 -mx-4 md:mx-0">
+            <VideoBlock url={item.video_url} title={item.title} className="md:rounded-xl" />
+            <MediaCredit source={item.video_source} />
           </figure>
         )}
 
