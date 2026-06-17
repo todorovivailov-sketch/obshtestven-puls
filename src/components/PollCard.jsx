@@ -50,7 +50,7 @@ export default function PollCard({ poll, showResults = false, landscape = false 
       {/* Снимка */}
       {poll.image_url && (
         <figure className={landscape ? 'md:w-5/12 shrink-0 bg-white' : 'bg-white'}>
-          <div className={landscape ? 'content-image-frame h-52 md:h-full' : 'content-image-frame h-48'}>
+          <div className="content-image-frame">
             <img src={poll.image_url} alt={poll.question} />
           </div>
           <div className="px-4 pb-3">

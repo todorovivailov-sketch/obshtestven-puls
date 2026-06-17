@@ -103,7 +103,7 @@ export default function Home() {
                 if (item.type === 'poll') return (
                   <Link key={i} to={`/anketi/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="content-image-frame h-36">
+                      <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.question} />
                       </div>
                     )}
@@ -122,7 +122,7 @@ export default function Home() {
                 if (item.type === 'article') return (
                   <Link key={i} to={`/komentari/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="content-image-frame h-36">
+                      <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     )}
@@ -140,7 +140,7 @@ export default function Home() {
                 if (item.type === 'policy') return (
                   <Link key={i} to={`/prevodach/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="content-image-frame h-36">
+                      <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     )}
@@ -217,7 +217,7 @@ export default function Home() {
             </div>
             <Link to={`/prevodach/${latestPolicy.id}`} className="card group flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-shadow">
               {latestPolicy.image_url && (
-                <div className="content-image-frame md:w-72 h-48 md:h-auto shrink-0">
+                <div className="content-image-frame md:w-72 shrink-0">
                   <img src={latestPolicy.image_url} alt={latestPolicy.title} />
                 </div>
               )}

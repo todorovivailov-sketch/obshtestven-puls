@@ -13,7 +13,7 @@ export default function ArticleCard({ article }) {
     <Link to={`/komentari/${article.id}`} className="article-card group">
       {/* Снимка */}
       {article.image_url && (
-        <div className="content-image-frame h-48 shrink-0">
+        <div className="content-image-frame shrink-0">
           <img
             src={article.image_url}
             alt={article.title}

@@ -81,16 +81,16 @@
     @apply shadow-md;
   }
   .content-image-frame {
-    @apply overflow-hidden bg-white flex items-center justify-center border-b border-gray-100;
+    @apply overflow-hidden bg-white border-b border-gray-100;
   }
   .content-image-frame img {
-    @apply block max-w-full max-h-full object-contain;
+    @apply block w-full h-auto;
   }
   .content-image-detail {
     @apply overflow-hidden bg-white flex items-center justify-center;
   }
   .content-image-detail img {
-    @apply block max-w-full max-h-[70vh] object-contain;
+    @apply block w-full h-auto max-h-[70vh] object-contain;
   }
 }
 

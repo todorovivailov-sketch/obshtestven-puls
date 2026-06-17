@@ -29,7 +29,7 @@ export default function PolicyTranslations() {
           {items.map(item => (
             <Link key={item.id} to={`/prevodach/${item.id}`} className="article-card group">
               {item.image_url && (
-                <div className="content-image-frame h-48 shrink-0">
+                <div className="content-image-frame shrink-0">
                   <img
                     src={item.image_url}
                     alt={item.title}
