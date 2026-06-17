@@ -97,12 +97,12 @@ export default function PolicyTranslationPage() {
         {/* Снимка */}
         {item.image_url && (
           <figure className="mb-8 -mx-4 md:mx-0">
-            <img
-              src={item.image_url}
-              alt={item.title}
-              className="w-full md:rounded-xl object-cover shadow-md"
-              style={{ maxHeight: '480px' }}
-            />
+            <div className="content-image-detail md:rounded-xl shadow-md">
+              <img
+                src={item.image_url}
+                alt={item.title}
+              />
+            </div>
             <MediaCredit source={item.image_source} />
           </figure>
         )}

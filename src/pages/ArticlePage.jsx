@@ -120,12 +120,12 @@ export default function ArticlePage() {
         {/* Снимка */}
         {article.image_url && (
           <figure className="mb-8 -mx-4 md:mx-0">
-            <img
-              src={article.image_url}
-              alt={article.title}
-              className="w-full md:rounded-xl object-cover shadow-md"
-              style={{ maxHeight: '480px' }}
-            />
+            <div className="content-image-detail md:rounded-xl shadow-md">
+              <img
+                src={article.image_url}
+                alt={article.title}
+              />
+            </div>
             <MediaCredit source={article.image_source} />
           </figure>
         )}

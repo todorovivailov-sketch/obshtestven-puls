@@ -103,8 +103,8 @@ export default function Home() {
                 if (item.type === 'poll') return (
                   <Link key={i} to={`/anketi/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="h-36 overflow-hidden">
-                        <img src={item.data.image_url} alt={item.data.question} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="content-image-frame h-36">
+                        <img src={item.data.image_url} alt={item.data.question} />
                       </div>
                     )}
                     <div className="p-5 flex flex-col flex-1">
@@ -122,8 +122,8 @@ export default function Home() {
                 if (item.type === 'article') return (
                   <Link key={i} to={`/komentari/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="h-36 overflow-hidden">
-                        <img src={item.data.image_url} alt={item.data.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="content-image-frame h-36">
+                        <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     )}
                     <div className="p-5 flex flex-col flex-1">
@@ -140,8 +140,8 @@ export default function Home() {
                 if (item.type === 'policy') return (
                   <Link key={i} to={`/prevodach/${item.data.id}`} className="article-card group flex flex-col">
                     {item.data.image_url && (
-                      <div className="h-36 overflow-hidden">
-                        <img src={item.data.image_url} alt={item.data.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="content-image-frame h-36">
+                        <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     )}
                     <div className="p-5 flex flex-col flex-1">
@@ -217,8 +217,8 @@ export default function Home() {
             </div>
             <Link to={`/prevodach/${latestPolicy.id}`} className="card group flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-shadow">
               {latestPolicy.image_url && (
-                <div className="md:w-72 h-48 md:h-auto shrink-0 overflow-hidden">
-                  <img src={latestPolicy.image_url} alt={latestPolicy.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="content-image-frame md:w-72 h-48 md:h-auto shrink-0">
+                  <img src={latestPolicy.image_url} alt={latestPolicy.title} />
                 </div>
               )}
               <div className="p-6 flex flex-col justify-center">
