@@ -1,4 +1,4 @@
-import { getYouTubeEmbedUrl } from '../lib/media'
+import { getYouTubeEmbedUrl, getYouTubeThumbnail } from '../lib/media'
 
 export function MediaCredit({ source }) {
   if (!source) return null
@@ -43,7 +43,31 @@ export function VideoBlock({ url, title = 'Видео', className = '' }) {
 
   return (
     <div className={frameClass}>
-      <video src={url} controls className="aspect-video w-full bg-black" preload="metadata" />
+      <video src={`${url}#t=0.1`} controls className="aspect-video w-full bg-black" preload="metadata" />
+    </div>
+  )
+}
+
+// Статичен кадър от видео за карти/тизъри (показва се вместо празно бяло поле)
+export function VideoThumb({ url, alt = 'Видео' }) {
+  if (!url) return null
+
+  const thumb = getYouTubeThumbnail(url)
+
+  return (
+    <div className="relative">
+      {thumb ? (
+        <img src={thumb} alt={alt} />
+      ) : (
+        <video src={`${url}#t=0.1`} muted playsInline preload="metadata" className="block w-full h-auto" />
+      )}
+      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span className="flex items-center justify-center w-12 h-12 rounded-full bg-black/55">
+          <svg className="w-5 h-5 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </span>
     </div>
   )
 }

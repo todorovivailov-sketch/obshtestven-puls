@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PollCard from '../components/PollCard'
 import ArticleCard from '../components/ArticleCard'
+import { VideoThumb } from '../components/MediaBlock'
 import { pollsApi, articlesApi, policyTranslationsApi } from '../lib/api'
 
 export default function Home() {
@@ -102,11 +103,15 @@ export default function Home() {
               {recentItems.map((item, i) => {
                 if (item.type === 'poll') return (
                   <Link key={i} to={`/anketi/${item.data.id}`} className="article-card group flex flex-col">
-                    {item.data.image_url && (
+                    {item.data.image_url ? (
                       <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.question} />
                       </div>
-                    )}
+                    ) : item.data.video_url ? (
+                      <div className="content-image-frame">
+                        <VideoThumb url={item.data.video_url} alt={item.data.question} />
+                      </div>
+                    ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-crimson-600 mb-2">Анкета</span>
                       <p className="font-serif font-bold text-navy-800 leading-snug line-clamp-3 flex-1">{item.data.question}</p>
@@ -121,11 +126,15 @@ export default function Home() {
                 )
                 if (item.type === 'article') return (
                   <Link key={i} to={`/komentari/${item.data.id}`} className="article-card group flex flex-col">
-                    {item.data.image_url && (
+                    {item.data.image_url ? (
                       <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
-                    )}
+                    ) : item.data.video_url ? (
+                      <div className="content-image-frame">
+                        <VideoThumb url={item.data.video_url} alt={item.data.title} />
+                      </div>
+                    ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
                         {item.data.category === 'analysis' ? 'Анализ' : item.data.category === 'comment' ? 'Коментар' : 'Новина'}
@@ -139,11 +148,15 @@ export default function Home() {
                 )
                 if (item.type === 'policy') return (
                   <Link key={i} to={`/prevodach/${item.data.id}`} className="article-card group flex flex-col">
-                    {item.data.image_url && (
+                    {item.data.image_url ? (
                       <div className="content-image-frame">
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
-                    )}
+                    ) : item.data.video_url ? (
+                      <div className="content-image-frame">
+                        <VideoThumb url={item.data.video_url} alt={item.data.title} />
+                      </div>
+                    ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Политика</span>
                       <p className="font-serif font-bold text-navy-800 leading-snug line-clamp-3 flex-1">{item.data.title}</p>

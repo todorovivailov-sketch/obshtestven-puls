@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { VideoThumb } from './MediaBlock'
 
 const CATEGORY_LABELS = {
   analysis: 'Анализ',
@@ -12,14 +13,18 @@ export default function ArticleCard({ article }) {
   return (
     <Link to={`/komentari/${article.id}`} className="article-card group">
       {/* Снимка */}
-      {article.image_url && (
+      {article.image_url ? (
         <div className="content-image-frame shrink-0">
           <img
             src={article.image_url}
             alt={article.title}
           />
         </div>
-      )}
+      ) : article.video_url ? (
+        <div className="content-image-frame shrink-0">
+          <VideoThumb url={article.video_url} alt={article.title} />
+        </div>
+      ) : null}
 
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-3">

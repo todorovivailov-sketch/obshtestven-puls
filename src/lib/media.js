@@ -29,3 +29,10 @@ export function getYouTubeEmbedUrl(url) {
 export function isYouTubeUrl(url) {
   return Boolean(getYouTubeEmbedUrl(url))
 }
+
+export function getYouTubeThumbnail(url) {
+  const embed = getYouTubeEmbedUrl(url)
+  if (!embed) return null
+  const id = embed.split('/embed/')[1]?.split(/[?&]/)[0]
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null
+}
