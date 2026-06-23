@@ -108,9 +108,7 @@ export default function Home() {
                         <img src={item.data.image_url} alt={item.data.question} />
                       </div>
                     ) : item.data.video_url ? (
-                      <div className="content-image-frame">
-                        <VideoThumb url={item.data.video_url} alt={item.data.question} />
-                      </div>
+                      <VideoThumb url={item.data.video_url} alt={item.data.question} />
                     ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-crimson-600 mb-2">Анкета</span>
@@ -131,9 +129,7 @@ export default function Home() {
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     ) : item.data.video_url ? (
-                      <div className="content-image-frame">
-                        <VideoThumb url={item.data.video_url} alt={item.data.title} />
-                      </div>
+                      <VideoThumb url={item.data.video_url} alt={item.data.title} />
                     ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
@@ -153,9 +149,7 @@ export default function Home() {
                         <img src={item.data.image_url} alt={item.data.title} />
                       </div>
                     ) : item.data.video_url ? (
-                      <div className="content-image-frame">
-                        <VideoThumb url={item.data.video_url} alt={item.data.title} />
-                      </div>
+                      <VideoThumb url={item.data.video_url} alt={item.data.title} />
                     ) : null}
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Политика</span>

@@ -55,11 +55,11 @@ export function VideoThumb({ url, alt = 'Видео' }) {
   const thumb = getYouTubeThumbnail(url)
 
   return (
-    <div className="relative">
+    <div className="relative aspect-video shrink-0 overflow-hidden bg-black border-b border-gray-100">
       {thumb ? (
-        <img src={thumb} alt={alt} />
+        <img src={thumb} alt={alt} className="w-full h-full object-cover" />
       ) : (
-        <video src={`${url}#t=0.1`} muted playsInline preload="metadata" className="block w-full h-auto" />
+        <video src={`${url}#t=0.1`} muted playsInline preload="metadata" className="w-full h-full object-cover" />
       )}
       <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <span className="flex items-center justify-center w-12 h-12 rounded-full bg-black/55">

@@ -21,9 +21,7 @@ export default function ArticleCard({ article }) {
           />
         </div>
       ) : article.video_url ? (
-        <div className="content-image-frame shrink-0">
-          <VideoThumb url={article.video_url} alt={article.title} />
-        </div>
+        <VideoThumb url={article.video_url} alt={article.title} />
       ) : null}
 
       <div className="p-5 flex flex-col flex-1">
