@@ -61,9 +61,9 @@ export default function PollCard({ poll, showResults = false, landscape = false 
 
       <div className={landscape ? 'flex-1 flex flex-col min-w-0' : ''}>
       {/* Хедър */}
-      <div className="bg-navy-800 p-5">
+      <div className="bg-navy-800 p-4">
         <div className="flex items-start justify-between gap-3 mb-2">
-          <h2 className="font-serif text-white font-bold text-lg leading-snug">{poll.question}</h2>
+          <h2 className="font-serif text-white font-bold text-base leading-snug">{poll.question}</h2>
           {isClosed
             ? <span className="badge-closed shrink-0">Приключила</span>
             : <span className="badge-active shrink-0"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />Активна</span>
@@ -92,9 +92,9 @@ export default function PollCard({ poll, showResults = false, landscape = false 
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-4">
         {poll.video_url && (
-          <figure className="mb-5">
+          <figure className="mb-4">
             <VideoBlock url={poll.video_url} title={poll.question} className="rounded-xl" />
             <MediaCredit source={poll.video_source} />
           </figure>
@@ -102,11 +102,11 @@ export default function PollCard({ poll, showResults = false, landscape = false 
 
         {/* Гласуване */}
         {!voted && !isClosed && (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {poll.options?.map(opt => (
               <label
                 key={opt.id}
-                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-150 ${
+                className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all duration-150 ${
                   selected === opt.id
                     ? 'border-crimson-400 bg-crimson-50'
                     : 'border-gray-200 hover:border-navy-300 hover:bg-gray-50'
